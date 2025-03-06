@@ -1,0 +1,43 @@
+.card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 180px;
+    height: 250px;
+    padding: 10px;
+    border: 5px solid rgb(252, 233, 34);
+    box-shadow: -10px 10px rgb(0, 0, 0, 0.6);
+}
+
+.card h3 {
+    font-size: 14px;
+}
+
+.card #image {
+    height: 50%;
+    object-fit: cover;
+}
+
+.cardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+}
+
+.card .types {
+    display: flex;
+    align-items: center;
+}
+
+.grass {
+    background-image: url(../res/leaf.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: green;
+    background-size: 16px;
+    border-radius: 100%;
+    padding: 2px;
+    width: 16px;
+    height: 16px;
+}
