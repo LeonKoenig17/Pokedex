@@ -1,0 +1,94 @@
+.typeIcon {
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 20px;
+    border-radius: 100%;
+    padding: 2px;
+    width: 20px;
+    height: 20px;
+    border: 3px solid black;
+    margin: 2px;
+}
+
+.normal {
+    background-image: url(../res/normal.png);
+    background-color: grey;
+}
+
+.fighting {
+    background-image: url(../res/fighting.png);
+    background-color: darkgrey;
+}
+.flying {
+    background-image: url(../res/flying.png);
+    background-color: lightblue;
+}
+.poison {
+    background-image: url(../res/poison.png);
+    background-color: limegreen;
+}
+.ground {
+    background-image: url(../res/ground.png);
+    background-color: rgb(165, 71, 42);
+}
+.rock {
+    background-image: url(../res/rock.png);
+    background-color: rgb(134, 119, 119);
+}
+.bug {
+    background-image: url(../res/bug.png);
+    background-color: brown;
+}
+.ghost {
+    background-image: url(../res/ghost.png);
+    background-color: black;
+}
+.steel {
+    background-image: url(../res/steel.png);
+    background-color: rgb(104, 115, 129);
+}
+.fire {
+    background-image: url(../res/fire.png);
+    background-color: rgb(243, 62, 49);
+}
+.water {
+    background-image: url(../res/water.png);
+    background-color: rgb(36, 120, 230);
+}
+.grass {
+    background-image: url(../res/leaf.png);
+    background-color: green;
+}
+.electric {
+    background-image: url(../res/electric.png);
+    background-color: rgb(218, 218, 0);
+}
+.psychic {
+    background-image: url(../res/psychic.png);
+    background-color: purple;
+}
+.ice {
+    background-image: url(../res/ice.png);
+    background-color: lightblue;
+}
+.dragon {
+    background-image: url(../res/dragon.png);
+    background-color: rgb(136, 30, 30);
+}
+.dark {
+    background-image: url(../res/dark.png);
+    background-color: darkblue;
+}
+.fairy {
+    background-image: url(../res/fairy.png);
+    background-color: rgb(170, 83, 170);
+}
+.stellar {
+    background-image: url(../res/stellar.png);
+    background-color: rgb(228, 228, 44);
+}
+.unknown {
+    background-image: url(../res/unknown.png);
+    background-color: grey;
+}
+
