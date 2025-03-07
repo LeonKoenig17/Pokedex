@@ -1,10 +1,20 @@
 const BASE_URL = "https://pokeapi.co/api/v2/";
 
-let deckSize = 100;
+let deckSize = 10;
 
 window.addEventListener("load", function() {
-    loadAllData("pokemon?limit=100000&offset=0");  
+    loadAllData("pokemon?limit=100000&offset=0");
 })
+
+window.addEventListener("DOMContentLoaded", function() {
+    getColors();
+})
+
+function getColors() {
+    console.log("DOMContentLoaded");
+    const elements = document.querySelectorAll(".typeIcon");
+    console.log(elements);
+}
 
 async function loadAllData(path="") {
     try {
@@ -91,8 +101,4 @@ async function loadData(path="") {
     } catch (error) {
         console.error("loadData Error:" + error);
     }
-}
-
-function setBackgroundColor() {
-
 }
