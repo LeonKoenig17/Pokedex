@@ -38,31 +38,23 @@ function processCardData(data) {
     let weight = Math.round(data.weight / 10);
     let abilities = data.abilities;
     let abilityString = "";
-    let bgColor = "";
-    let bgColors = [];
 
     types.forEach(type => {
         let nextType = type.type.name;
         typeString += `<span class="${nextType} typeIcon"></span>`;
-       bgColors.push(nextType);
     });
-
-    bgColors.forEach(color => {
-        // console.log(color);
-        // window.getComputedStyle(color).backgroundColor;
-    })
 
     abilities.forEach(ability => {
         let nextAbility = ability.ability.name.charAt(0).toUpperCase() + ability.ability.name.slice(1);
         abilityString += `${nextAbility}<br>`;
     })
     
-    mainContent.innerHTML += createCard(name, typeString, sprite, hp, attack, defense, baseXP, height, weight, abilityString, bgColors);
+    mainContent.innerHTML += createCard(name, typeString, sprite, hp, attack, defense, baseXP, height, weight, abilityString);
 }
 
-function createCard(name, types, sprite, hp, attack, defense, xp, height, weight, abilities, bgColor) {
+function createCard(name, types, sprite, hp, attack, defense, xp, height, weight, abilities) {
     return `
-        <div class="card ${bgColor}">
+        <div class="card">
             <div class="cardHeader">
                 <h3>${name}</h3>
                 <span>${hp}HP</span>
@@ -99,4 +91,23 @@ function createCard(name, types, sprite, hp, attack, defense, xp, height, weight
 function getCards() {
     let cards = document.querySelectorAll(".card");
     console.log(cards);
+    
+    let cardIndex = 1;
+    cards.forEach(card => {
+        console.log(cardIndex);
+        cardIndex++;
+        let types = card.querySelectorAll(".types span");
+        let colors = [];
+        types.forEach(type => {
+            let color = window.getComputedStyle(type).backgroundColor;
+            colors.push(color);
+        })
+        console.log(colors);
+        
+        if (colors.length == 2) {
+            card.style.background = `linear-gradient(135deg, ${colors[0]}50%, ${colors[1]}50%)`;
+        } else {
+            card.style.backgroundColor = `${colors[0]}`;
+        }
+    })
 }
