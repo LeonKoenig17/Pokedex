@@ -1,18 +1,47 @@
 window.addEventListener("load", function() {
-    const BASE_URL = "https://pokeapi.co/api/v2/";
-    loadAllData(BASE_URL, "pokemon?limit=100000&offset=0", deckSize = 10);
+    init();
 })
 
-async function loadAllData(BASE_URL, path="", deckSize) {
+async function init() {
+    const overlay = document.getElementById("loading");
+    showLoading(overlay);
+    await loadAllData("pokemon?limit=100000&offset=0");
+    hideLoading(overlay);
+    renderCardList();
+    setBackgroundColor();
+}
+
+function showLoading(overlay) {
+    const loadingSpinner = overlay.querySelector("img");
+    overlay.style.display = "flex";
+    let angle = 0;
+
+    setInterval(() => {
+        angle += 25;
+        loadingSpinner.style.transform = `rotate(${angle}deg)`;
+    }, 200)
+}
+
+function hideLoading(overlay) {
+    overlay.style.display = "none";
+}
+
+async function loadAllData(path="") {
     try {
+        const BASE_URL = "https://pokeapi.co/api/v2/";
+        const loadingBar = document.getElementById("loadingBar");
+        loadingBar.style.width = "0";
+        console.log(loadingBar.style.width);
+        let deckSize = 40;
         let response = await fetch(BASE_URL + path);
         let responseToJson = await response.json();
 
         for (let i = 0; i < deckSize; i++) {
-            await loadData(responseToJson.results[i].url); // waits for LoadData() to finish before executing again
+            await loadData(responseToJson.results[i].url);
+            let percentage = ((i + 1) / deckSize) * 100;
+            loadingBar.style.width = percentage + "%";
         }
-
-        getCards();
+        console.log(loadingBar.style.width);
     } catch (error) {
         console.error("loadAllData Error: " + error);
     }
@@ -24,8 +53,9 @@ async function loadData(path="") {
     processCardData(data);
 }
 
-function processCardData(data) {
-    const mainContent = document.getElementById("mainContent");        
+let cardsToRender = "";
+
+function processCardData(data) {      
     let name = data.name.charAt(0).toUpperCase() + data.name.slice(1);
     let types = data.types;
     let typeString = "";
@@ -49,7 +79,8 @@ function processCardData(data) {
         abilityString += `${nextAbility}<br>`;
     })
     
-    mainContent.innerHTML += createCard(name, typeString, sprite, hp, attack, defense, baseXP, height, weight, abilityString);
+    cardsToRender += createCard(name, typeString, sprite, hp, attack, defense, baseXP, height, weight, abilityString);
+    // setBackgroundColor();
 }
 
 function createCard(name, types, sprite, hp, attack, defense, xp, height, weight, abilities) {
@@ -88,13 +119,11 @@ function createCard(name, types, sprite, hp, attack, defense, xp, height, weight
     `;
 }
 
-function getCards() {
+function setBackgroundColor() {
     let cards = document.querySelectorAll(".card");
-    console.log(cards);
     
     let cardIndex = 1;
     cards.forEach(card => {
-        console.log(cardIndex);
         cardIndex++;
         let types = card.querySelectorAll(".types span");
         let colors = [];
@@ -102,12 +131,16 @@ function getCards() {
             let color = window.getComputedStyle(type).backgroundColor;
             colors.push(color);
         })
-        console.log(colors);
         
         if (colors.length == 2) {
-            card.style.background = `linear-gradient(135deg, ${colors[0]}50%, ${colors[1]}50%)`;
+            card.style.background = `linear-gradient(135deg, ${colors[0]}75%, ${colors[1]}20%)`;
         } else {
             card.style.backgroundColor = `${colors[0]}`;
         }
     })
+}
+
+function renderCardList() {
+    const mainContent = document.getElementById("mainContent");
+    mainContent.innerHTML = cardsToRender;
 }

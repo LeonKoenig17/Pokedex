@@ -20,6 +20,7 @@ header, footer {
     justify-content: center;
     align-items: center;
     color: #ec7872;
+    /* ec7872 */
     background-color: #522258;
     height: 80px;
 }
@@ -27,6 +28,21 @@ header, footer {
 #heading, #search {
     display: flex;
     align-items: center;
+}
+
+#heading img {
+    width: 60px;
+    padding: 16px;
+}
+
+#searchInput {
+    margin: 10px;
+    border: none;
+    padding: 5px;
+}
+
+#searchInput:focus-visible {
+    outline: none;
 }
 
 h1, h2, h3 {
@@ -48,4 +64,32 @@ main {
     width: 100%;
     max-width: 1920px;
     gap: 50px;
+}
+
+#loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#loading img {
+    width: 200px;
+    height: 200px;
+    padding: 50px;
+    filter:opacity(0.8) brightness(2);
+}
+
+#loadingBarContainer {
+    height: 20px;
+    width: 100%;
+    background-color: rgb(255, 235, 235);
+}
+
+#loadingBar {
+    height: 100%;
+    background-color:#8C3061;
+}
+
+#loading span {
+    font-size: 18px;
 }

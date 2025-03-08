@@ -12,28 +12,28 @@
 
 .normal {
     background-image: url(../res/normal.png);
-    background-color: grey;
+    background-color: rgb(182, 182, 182);
 }
 
 .fighting {
     background-image: url(../res/fighting.png);
-    background-color: darkgrey;
+    background-color: rgb(123, 139, 148);
 }
 .flying {
     background-image: url(../res/flying.png);
-    background-color: lightblue;
+    background-color: rgb(136, 196, 216);
 }
 .poison {
     background-image: url(../res/poison.png);
-    background-color: limegreen;
+    background-color: #A45294;
 }
 .ground {
     background-image: url(../res/ground.png);
-    background-color: rgb(165, 71, 42);
+    background-color: #8B6218;
 }
 .rock {
     background-image: url(../res/rock.png);
-    background-color: rgb(134, 119, 119);
+    background-color: #948B7B;
 }
 .bug {
     background-image: url(../res/bug.png);
@@ -41,35 +41,35 @@
 }
 .ghost {
     background-image: url(../res/ghost.png);
-    background-color: black;
+    background-color: #D5ACCD;
 }
 .steel {
     background-image: url(../res/steel.png);
-    background-color: rgb(104, 115, 129);
+    background-color: #7C7B7B;
 }
 .fire {
     background-image: url(../res/fire.png);
-    background-color: rgb(243, 62, 49);
+    background-color: #E64110;
 }
 .water {
     background-image: url(../res/water.png);
-    background-color: rgb(36, 120, 230);
+    background-color: #5A8BCD;
 }
 .grass {
     background-image: url(../res/leaf.png);
-    background-color: green;
+    background-color: #5ead57;
 }
 .electric {
     background-image: url(../res/electric.png);
-    background-color: rgb(218, 218, 0);
+    background-color: #F6BD20;
 }
 .psychic {
     background-image: url(../res/psychic.png);
-    background-color: purple;
+    background-color: rgb(126, 60, 126);
 }
 .ice {
     background-image: url(../res/ice.png);
-    background-color: lightblue;
+    background-color: #D5CDEE;
 }
 .dragon {
     background-image: url(../res/dragon.png);
