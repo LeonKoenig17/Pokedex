@@ -1,11 +1,11 @@
 .typeIcon {
     background-repeat: no-repeat;
     background-position: center;
-    background-size: 20px;
+    background-size: 16px;
     border-radius: 100%;
     padding: 2px;
-    width: 20px;
-    height: 20px;
+    width: 16px;
+    height: 16px;
     border: 3px solid black;
     margin: 2px;
 }
