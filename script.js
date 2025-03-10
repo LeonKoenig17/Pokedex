@@ -1,29 +1,65 @@
+// bugs:
+    // loadingSpinner too fast when loading search results
+
 window.addEventListener("load", function() {
     init();
 })
 
 async function init() {
+    const mainContent = document.getElementById("mainContent");
     const overlay = document.getElementById("loading");
+    mainContent.style.display = "none";
     showLoading(overlay);
     await loadAllData("pokemon?limit=100000&offset=0");
     hideLoading(overlay);
-    renderCardList();
+    mainContent.style.display = "flex";
     setBackgroundColor();
 }
 
-function showLoading(overlay) {
-    const loadingSpinner = overlay.querySelector("img");
-    overlay.style.display = "flex";
-    let angle = 0;
-
-    setInterval(() => {
-        angle += 25;
-        loadingSpinner.style.transform = `rotate(${angle}deg)`;
-    }, 200)
+async function initSearch() {
+    const inputField = document.getElementById("searchInput");
+    let input = inputField.value;
+    if (input.trim() != "") {
+        const mainContent = document.getElementById("mainContent");
+        const overlay = document.getElementById("loading");
+        mainContent.style.display = "none";
+        mainContent.innerHTML = "";
+        showLoading(overlay);
+        await loadSearchData("pokemon?limit=100000&offset=0", input);
+        hideLoading(overlay);
+        mainContent.style.display = "flex";
+        setBackgroundColor();
+    }
 }
 
-function hideLoading(overlay) {
-    overlay.style.display = "none";
+async function loadSearchData(path="", input) {
+    try {
+        const BASE_URL = "https://pokeapi.co/api/v2/";
+        const loadingBar = document.getElementById("loadingBar");
+        loadingBar.style.width = "0";
+        let response = await fetch(BASE_URL + path);
+        let responseToJson = await response.json();
+        let searchResArray = [];
+
+        responseToJson.results.forEach(pokemon => {
+            if (pokemon.name.includes(input)) {
+                searchResArray.push(pokemon.url);
+            } else {
+                // show message: Nothing found
+            }
+        })
+
+        let resIndex = 1;
+
+        for (const res of searchResArray) {
+            await loadData(res);
+            let percentage = (resIndex / searchResArray.length) * 100;
+            loadingBar.style.width = percentage + "%";
+            resIndex++;
+        }
+    } catch (error) {
+        console.error("loadSearchData Error: " + error);
+    }
 }
 
 async function loadAllData(path="") {
@@ -31,17 +67,15 @@ async function loadAllData(path="") {
         const BASE_URL = "https://pokeapi.co/api/v2/";
         const loadingBar = document.getElementById("loadingBar");
         loadingBar.style.width = "0";
-        console.log(loadingBar.style.width);
         let deckSize = 40;
         let response = await fetch(BASE_URL + path);
-        let responseToJson = await response.json();
+        let responseToJson = await response.json(); // all pokemon
 
         for (let i = 0; i < deckSize; i++) {
             await loadData(responseToJson.results[i].url);
             let percentage = ((i + 1) / deckSize) * 100;
             loadingBar.style.width = percentage + "%";
         }
-        console.log(loadingBar.style.width);
     } catch (error) {
         console.error("loadAllData Error: " + error);
     }
@@ -53,9 +87,9 @@ async function loadData(path="") {
     processCardData(data);
 }
 
-let cardsToRender = "";
 
-function processCardData(data) {      
+function processCardData(data) {
+    const mainContent = document.getElementById("mainContent"); 
     let name = data.name.charAt(0).toUpperCase() + data.name.slice(1);
     let types = data.types;
     let typeString = "";
@@ -79,8 +113,28 @@ function processCardData(data) {
         abilityString += `${nextAbility}<br>`;
     })
     
-    cardsToRender += createCard(name, typeString, sprite, hp, attack, defense, baseXP, height, weight, abilityString);
-    // setBackgroundColor();
+    mainContent.innerHTML += createCard(name, typeString, sprite, hp, attack, defense, baseXP, height, weight, abilityString);
+}
+
+function setBackgroundColor() {
+    let cards = document.querySelectorAll(".card");
+    
+    let cardIndex = 1;
+    cards.forEach(card => {
+        cardIndex++;
+        let types = card.querySelectorAll(".types span");
+        let colors = [];
+        types.forEach(type => {
+            let color = window.getComputedStyle(type).backgroundColor;
+            colors.push(color);
+        })
+        
+        if (colors.length == 2) {
+            card.style.background = `linear-gradient(135deg, ${colors[0]}75%, ${colors[1]}20%)`;
+        } else {
+            card.style.backgroundColor = `${colors[0]}`;
+        }
+    })
 }
 
 function createCard(name, types, sprite, hp, attack, defense, xp, height, weight, abilities) {
@@ -93,7 +147,9 @@ function createCard(name, types, sprite, hp, attack, defense, xp, height, weight
                     ${types}
                 </div>
             </div>
-            <img class="image" src="${sprite}" alt="card image">
+            <div class="image">
+                <img src="${sprite}" alt="card image">
+            </div>
             <div class="info">
                 <span>XP: ${xp}</span>
                 <span>HT: ${height}cm</span>
@@ -119,28 +175,18 @@ function createCard(name, types, sprite, hp, attack, defense, xp, height, weight
     `;
 }
 
-function setBackgroundColor() {
-    let cards = document.querySelectorAll(".card");
+function showLoading(overlay) {
+    const loadingSpinner = overlay.querySelector("img");
+    overlay.style.display = "flex";
+    let angle = 0;
     
-    let cardIndex = 1;
-    cards.forEach(card => {
-        cardIndex++;
-        let types = card.querySelectorAll(".types span");
-        let colors = [];
-        types.forEach(type => {
-            let color = window.getComputedStyle(type).backgroundColor;
-            colors.push(color);
-        })
-        
-        if (colors.length == 2) {
-            card.style.background = `linear-gradient(135deg, ${colors[0]}75%, ${colors[1]}20%)`;
-        } else {
-            card.style.backgroundColor = `${colors[0]}`;
-        }
-    })
+    setInterval(() => {
+        angle += 25;
+        loadingSpinner.style.transform = `rotate(${angle}deg)`;
+    }, 200)
+    console.log(angle);
 }
 
-function renderCardList() {
-    const mainContent = document.getElementById("mainContent");
-    mainContent.innerHTML = cardsToRender;
+function hideLoading(overlay) {
+    overlay.style.display = "none";
 }

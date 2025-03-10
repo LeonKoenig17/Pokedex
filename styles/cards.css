@@ -19,7 +19,7 @@
 
 .cardHeader, .card .info, .card table {
     border: 3px solid black;
-    background-color: rgb(255, 255, 255, 0.3);
+    background-color: rgba(255, 255, 255, 0.7);
 }
 
 .cardHeader {
@@ -32,10 +32,15 @@
 
 .card .image {
     height: 40%;
-    object-fit: cover;
-    overflow: visible;
     background-color: rgb(0, 0, 0, 0.4);
     border: 3px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card .image img {
+    width: 80%;
 }
 
 .card .types {
