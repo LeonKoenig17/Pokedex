@@ -1,106 +1,85 @@
 // bugs:
-    // loadingSpinner too fast when loading search results
+    // loadingSpinner rotates faster when loading search results
+// implement:
+    // card overlay
 
 window.addEventListener("load", function() {
-    init();
+    start("");
 })
 
-async function init() {
-    const mainContent = document.getElementById("mainContent");
-    const overlay = document.getElementById("loading");
-    mainContent.style.display = "none";
-    showLoading(overlay);
-    await loadAllData("pokemon?limit=100000&offset=0");
-    hideLoading(overlay);
-    mainContent.style.display = "flex";
-    setBackgroundColor();
-}
-
-async function initSearch() {
+function getInput() {
     const inputField = document.getElementById("searchInput");
     let input = inputField.value;
     if (input.trim() != "") {
+        start(input);
+    }
+}
+
+async function start(input) {
+    try {
         const mainContent = document.getElementById("mainContent");
         const overlay = document.getElementById("loading");
+        const searchBtn = document.getElementById("searchBtn");
+
         mainContent.style.display = "none";
-        mainContent.innerHTML = "";
+        let path = "https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0";
+        let response = await fetch(path);
+        let responseToJson = await response.json(); // all-pokemon array
+        let selectionArray = []; // URLs
+
+        if (input.trim() != "") {
+            selectionArray = [];
+            mainContent.innerHTML = "";
+            responseToJson.results.forEach(pokemon => {
+                if(pokemon.name.includes(input)) {
+                    selectionArray.push(pokemon.url);
+                }
+            })
+        } else {
+            for (let i = 0; i < 40; i++) {
+                selectionArray.push(responseToJson.results[i].url);
+            }
+        }
+        searchBtn.removeEventListener("click", getInput);
         showLoading(overlay);
-        await loadSearchData("pokemon?limit=100000&offset=0", input);
+        await loadData(selectionArray)
+        searchBtn.addEventListener("click", getInput);
         hideLoading(overlay);
         mainContent.style.display = "flex";
         setBackgroundColor();
-    }
-}
-
-async function loadSearchData(path="", input) {
-    try {
-        const BASE_URL = "https://pokeapi.co/api/v2/";
-        const loadingBar = document.getElementById("loadingBar");
-        loadingBar.style.width = "0";
-        let response = await fetch(BASE_URL + path);
-        let responseToJson = await response.json();
-        let searchResArray = [];
-
-        responseToJson.results.forEach(pokemon => {
-            if (pokemon.name.includes(input)) {
-                searchResArray.push(pokemon.url);
-            } else {
-                // show message: Nothing found
-            }
-        })
-
-        let resIndex = 1;
-
-        for (const res of searchResArray) {
-            await loadData(res);
-            let percentage = (resIndex / searchResArray.length) * 100;
-            loadingBar.style.width = percentage + "%";
-            resIndex++;
-        }
+        
     } catch (error) {
-        console.error("loadSearchData Error: " + error);
+        console.error("startError: " + error);
     }
 }
 
-async function loadAllData(path="") {
-    try {
-        const BASE_URL = "https://pokeapi.co/api/v2/";
-        const loadingBar = document.getElementById("loadingBar");
-        loadingBar.style.width = "0";
-        let deckSize = 40;
-        let response = await fetch(BASE_URL + path);
-        let responseToJson = await response.json(); // all pokemon
-
-        for (let i = 0; i < deckSize; i++) {
-            await loadData(responseToJson.results[i].url);
-            let percentage = ((i + 1) / deckSize) * 100;
-            loadingBar.style.width = percentage + "%";
-        }
-    } catch (error) {
-        console.error("loadAllData Error: " + error);
+async function loadData(selectionArray) {
+    const loadingBar = document.getElementById("loadingBar");
+    let cardIndex = 0;
+    for (const url of selectionArray) {
+        let response = await fetch(url);
+        let data = await response.json();
+        processCardData(data);
+        cardIndex++;
+        let percentage = (cardIndex / selectionArray.length) * 100;
+        loadingBar.style.width = percentage + "%";
     }
 }
 
-async function loadData(path="") {
-    let response = await fetch(path);
-    let data = await response.json();
-    processCardData(data);
-}
 
-
-function processCardData(data) {
+function processCardData(pokemon) {
     const mainContent = document.getElementById("mainContent"); 
-    let name = data.name.charAt(0).toUpperCase() + data.name.slice(1);
-    let types = data.types;
+    let name = pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1);
+    let types = pokemon.types;
     let typeString = "";
-    let sprite = data.sprites.front_default;
-    let hp = data.stats[0].base_stat;
-    let attack = data.stats[1].base_stat;
-    let defense = data.stats[2].base_stat;
-    let baseXP = data.base_experience;
-    let height = data.height * 10;
-    let weight = Math.round(data.weight / 10);
-    let abilities = data.abilities;
+    let sprite = pokemon.sprites.front_default;
+    let hp = pokemon.stats[0].base_stat;
+    let attack = pokemon.stats[1].base_stat;
+    let defense = pokemon.stats[2].base_stat;
+    let baseXP = pokemon.base_experience;
+    let height = pokemon.height * 10;
+    let weight = Math.round(pokemon.weight / 10);
+    let abilities = pokemon.abilities;
     let abilityString = "";
 
     types.forEach(type => {
