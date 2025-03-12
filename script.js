@@ -1,16 +1,27 @@
 // bugs:
 // implement:
-    // card overlay
+    // card overlay:
+    // overlay should close when clicking in empty space
+    // body not scrollable while overlay is open
+    // go to next/previous card by clicking arrows
+
+    //overlayContent 
+    // ability + description
+        // abilityURL: pokemon.abilities[i].ability.url
+        // description: urlJson().effect_entries[1].effect
+    // evolutions + images
 
 window.addEventListener("load", function() {
     reset();
 })
+
 
 function reset() {
     const mainContent = document.getElementById("mainContent");
     mainContent.innerHTML = "";
     start("");
 }
+
 
 function getInput() {
     const inputField = document.getElementById("searchInput");
@@ -20,8 +31,8 @@ function getInput() {
     }
 }
 
+
 let offset = 30;
-let selectionArray = []; // URLs
 
 async function start(input) {
     try {
@@ -30,11 +41,10 @@ async function start(input) {
         let path = `https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0`;
         let response = await fetch(path);
         let responseToJson = await response.json(); // all-pokemon array
+        let selectionArray = [];
 
         if (input != "") {
             mainContent.innerHTML = "";
-            loadMoreBtn.style.display = "none";
-            selectionArray = [];
             responseToJson.results.forEach(pokemon => {
                 if(pokemon.name.toLowerCase().includes(input.toLowerCase())) {
                     selectionArray.push(pokemon.url);
@@ -42,11 +52,9 @@ async function start(input) {
             })
             processSelection(selectionArray);
         } else {
-            selectionArray = [];
             for (let i = 0; i < offset; i++) {
                 selectionArray.push(responseToJson.results[i].url);
             }
-            loadMoreBtn.style.display = "none";
             await processSelection(selectionArray);
             loadMoreBtn.style.display = "block";
         }
@@ -55,9 +63,10 @@ async function start(input) {
     }
 }
 
+let loadingContent = "";
+
 async function processSelection(selectionArray) {
     const mainContent = document.getElementById("mainContent");
-    const loadingContent = document.getElementById("loadingContent");
     const overlay = document.getElementById("loading");
     const searchBtn = document.getElementById("searchBtn");
     const heading = document.getElementById("heading");
@@ -73,16 +82,17 @@ async function processSelection(selectionArray) {
     searchBtn.addEventListener("click", getInput);
     heading.addEventListener("click", reset);
     hideLoading(overlay);
+    mainContent.innerHTML += loadingContent;
     setBackgroundColor();
-    mainContent.innerHTML += loadingContent.innerHTML;
-    loadingContent.innerHTML = "";
+    loadingContent = "";
 }
+
 
 async function loadMore() {
     let path = `https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0`;
     let response = await fetch(path);
     let responseToJson = await response.json();
-    selectionArray = [];
+    let selectionArray = [];
     
     for (let i = offset; i < (offset + 30); i++) {
         if (i >= responseToJson.results.length) break;
@@ -94,6 +104,7 @@ async function loadMore() {
     loadMoreBtn.style.display = "block";
     setBackgroundColor();
 }
+
 
 async function loadData(selectionArray) {
     const loadingBar = document.getElementById("loadingBar");
@@ -108,8 +119,8 @@ async function loadData(selectionArray) {
     }
 }
 
+
 function processCardData(pokemon) {
-    const loadingContent = document.getElementById("loadingContent"); 
     let name = pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1);
     let types = pokemon.types;
     let typeString = "";
@@ -133,8 +144,9 @@ function processCardData(pokemon) {
         abilityString += `${nextAbility}<br>`;
     })
     
-    loadingContent.innerHTML += createCard(name, typeString, sprite, hp, attack, defense, baseXP, height, weight, abilityString);
+    loadingContent += createCard(name, typeString, sprite, hp, attack, defense, baseXP, height, weight, abilityString);
 }
+
 
 function setBackgroundColor() {
     let cards = document.querySelectorAll(".card");
@@ -156,6 +168,7 @@ function setBackgroundColor() {
         }
     })
 }
+
 
 function createCard(name, types, sprite, hp, attack, defense, xp, height, weight, abilities) {
     return `
@@ -195,6 +208,7 @@ function createCard(name, types, sprite, hp, attack, defense, xp, height, weight
     `;
 }
 
+
 let rotationInterval;
 
 function showLoading(overlay) {
@@ -207,6 +221,7 @@ function showLoading(overlay) {
         loadingSpinner.style.transform = `rotate(${angle}deg)`;
     }, 200)
 }
+
 
 function hideLoading(overlay) {
     overlay.style.display = "none";

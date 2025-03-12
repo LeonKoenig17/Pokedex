@@ -71,10 +71,6 @@ main {
     gap: 50px;
 }
 
-#loadingContent {
-    background-color: red;
-    display: none;
-}
 #loading {
     display: flex;
     flex-direction: column;
