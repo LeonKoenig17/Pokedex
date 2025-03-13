@@ -10,10 +10,42 @@
         // abilityURL: pokemon.abilities[i].ability.url
         // description: urlJson().effect_entries[1].effect
     // evolutions + images
+        // evolutionChainURL: pokemon.species.url -> responseToJson.evolution_chain
+        // evoChainDetails: 
+            // responseToJson.chain.species.name||url -> image
+            // responseToJson.chain.evolves_to[0].species.name||url -> image
+            // responseToJson.chain.evolves_to[0].evolves_to[0].species.name||url -> image
 
 window.addEventListener("load", function() {
+    getAbility();
     reset();
 })
+
+
+async function getAbility() { // debug function
+    let url = "https://pokeapi.co/api/v2/pokemon/ivysaur";
+    let response = await fetch(url);
+    let responseToJson = await response.json();
+    console.log(responseToJson);
+    getChild();
+}
+
+
+async function getChild() { // debug function
+    let url = "https://pokeapi.co/api/v2/pokemon-species/1/";
+    let response = await fetch(url);
+    let responseToJson = await response.json();
+    console.log(responseToJson);
+    getNextChild();
+}
+
+
+async function getNextChild() { // debug function
+    let url = "https://pokeapi.co/api/v2/evolution-chain/1/";
+    let response = await fetch(url);
+    let responseToJson = await response.json();
+    console.log(responseToJson);
+}
 
 
 function reset() {
