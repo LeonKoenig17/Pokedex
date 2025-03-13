@@ -6,7 +6,7 @@
     position: fixed;
     top: 0;
     left: 0;
-    display: none;
+    display: flex;
     justify-content: center;
     align-items: center;
 }
@@ -15,4 +15,11 @@
     background-color: white;
     width: 900px;
     height: 500px;
+}
+
+.large {
+    transform: scale(calc(500/300));
+    /* height: calc(500px - 30px);
+    width: calc(200px * (500 / 300) - 30px); */
+    box-shadow: none;
 }

@@ -6,6 +6,9 @@
     // go to next/previous card by clicking arrows
 
 window.addEventListener("load", function() {
+    const overlayCard = document.querySelector(".cardDisplay .card");
+    overlayCard.classList.add("large");
+    overlayCard.classList.remove("isButton");
     reset();
 })
 
@@ -199,7 +202,7 @@ async function tracePokemon(url) {
 
 function createCard(pokemon, types, abilities) {
     return `
-        <div class="card">
+        <div class="card isButton">
             <div class="cardHeader">
                 <h3>${pokemon.name}</h3>
                 <span>${pokemon.hitpoints}HP</span>
