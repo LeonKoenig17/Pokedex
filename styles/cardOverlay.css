@@ -20,7 +20,6 @@
 }
 
 #box {
-    background-color: rgb(240, 201, 169);
     width: 600px;
     height: 450px;
 }
@@ -37,17 +36,21 @@
 #boxContent {
     height: calc(450px - 44px);
     display: flex;
+    border: 3px solid black;
+    border-top: none;
+    background-color: rgb(240, 201, 169);
 }
 
 #statsBtn, #abilitiesBtn, #evoChainBtn {
-    border: none;
+    border: 3px solid black;
     width: 100%;
     padding: 10px;
+    background-color: rgb(219, 176, 141);
 }
 
-#stats, #abilities, #evoChain {
+#stats, #evoChain {
     width: 100%;
-    display: flex;
+    display: none;
     align-items: center;
 }
 
@@ -124,4 +127,49 @@
     background-color: rgb(230, 73, 73);
     height: 100%;
     max-width: 100%;
+}
+
+#abilities {
+    padding: 30px;
+    display: none;
+    flex-direction: column;
+    justify-content: space-around;
+    /* align-items: left; */
+    overflow-y: auto;
+}
+
+#abilities p {
+    margin: 10px 0;
+    margin-bottom: 30px;
+    font-size: 16px;
+}
+
+#evoChain {
+    justify-content: center;
+}
+
+#evoChain img {
+    width: 150px;
+    height: 150px;
+    background-color: #231425;
+    border: 4px solid rgb(252, 233, 34);
+}
+
+#evoChain span {
+    padding: 10px;
+}
+
+.evo{
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    margin: 20px;
+}
+
+.active {
+    display: flex !important;
+}
+
+.activeBtn {
+    border-bottom: none !important;
 }
