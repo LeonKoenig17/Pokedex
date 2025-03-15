@@ -6,9 +6,6 @@
     // go to next/previous card by clicking arrows
 
 window.addEventListener("load", function() {
-    const overlayCard = document.querySelector(".cardDisplay .card");
-    overlayCard.classList.add("large");
-    overlayCard.classList.remove("isButton");
     reset();
 })
 
@@ -16,6 +13,10 @@ window.addEventListener("load", function() {
 function reset() {
     const mainContent = document.getElementById("mainContent");
     mainContent.innerHTML = "";
+    console.log(mainContent.innerHTML);
+    pokemonArray = [];
+    cardIndex = 0;
+    offset = 30;
     start("");
 }
 
@@ -23,6 +24,8 @@ function reset() {
 function getInput() {
     const inputField = document.getElementById("searchInput");
     let input = inputField.value.trim();
+    pokemonArray = [];
+    cardIndex = 0;
     if (input != "") {
         start(input);
     }
@@ -54,6 +57,7 @@ async function start(input) {
             await processSelection(selectionArray);
             loadMoreBtn.style.display = "block";
         }
+        loadingBar.style.width = 0;
     } catch (error) {
         console.error("startError: " + error);
     }
@@ -78,9 +82,10 @@ async function processSelection(selectionArray) {
     searchBtn.addEventListener("click", getInput);
     heading.addEventListener("click", reset);
     hideLoading(overlay);
-    loadingContent.forEach(card => mainContent.innerHTML += card)
-    setBackgroundColor();
+    loadingContent.forEach(card => mainContent.innerHTML += card);
     loadingContent = [];
+    setBackgroundColor();
+    console.log(pokemonArray);
 }
 
 
@@ -97,7 +102,7 @@ async function loadMore() {
     
     await processSelection(selectionArray);
     loadMoreBtn.style.display = "block";
-    setBackgroundColor();
+    selectionArray = [];
 }
 
 
@@ -115,7 +120,7 @@ async function loadData(selectionArray) {
 
 
 let pokemonArray = [];
-let cardIndex = 1;
+let cardIndex = 0;
 
 async function getStats(pokemon) {
     try {
@@ -158,6 +163,7 @@ async function getStats(pokemon) {
         })
         
         let newPokemon = {
+            index: cardIndex,
             name: formattedName,
             image: sprites.front_default,
             types: typeNames,
@@ -202,13 +208,11 @@ async function tracePokemon(url) {
 
 function createCard(pokemon, types, abilities) {
     return `
-        <div class="card isButton">
+        <div id="${pokemon.index}" class="card isButton" onclick="openOverlay(${pokemon.index})">
             <div class="cardHeader">
                 <h3>${pokemon.name}</h3>
                 <span>${pokemon.hitpoints}HP</span>
-                <div class="types">
-                    ${types}
-                </div>
+                <div class="types">${types}</div>
             </div>
             <div class="image">
                 <img src="${pokemon.image}" alt="card image">

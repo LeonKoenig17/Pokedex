@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="/styles/cardOverlay.css">
     <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"> -->
     <script src="/script.js"></script>
+    <script src="./scripts/overlay.js"></script>
     <!-- <script src="/scripts/containerDebugger.js"></script> -->
 </head>
 <body>
@@ -27,9 +28,7 @@
         </div>
     </header>
     <main>
-        <div id="mainContent">
-            
-        </div>
+        <div id="mainContent"></div>
         <div id="loading">
             <img src="./res/logo.svg" alt="loading">
             <span>Searching for cards...</span>
@@ -41,41 +40,7 @@
     </main>
     <footer>footer</footer>
     <div id="cardOverlay">
-        <div class="cardDisplay">
-            <div class="card" style="background: linear-gradient(135deg, rgb(94, 173, 87) 75%, rgb(164, 82, 148) 20%);">
-                <div class="cardHeader largeBox">
-                    <h3>Bulbasaur</h3>
-                    <span>45HP</span>
-                    <div class="types">
-                        <span class="grass typeIcon"></span><span class="poison typeIcon"></span>
-                    </div>
-                </div>
-                <div class="image">
-                    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png" alt="card image">
-                </div>
-                <div class="info largeBox">
-                    <span>XP: 64</span>
-                    <span>HT: 70cm</span>
-                    <span>WT: 7kg</span>
-                </div>
-                <div class="attributes largeBox">
-                    <table>
-                        <tbody><tr>
-                            <td>Attack:</td>
-                            <td>49</td>
-                        </tr>
-                        <tr>
-                            <td>Defense:</td>
-                            <td>49</td>
-                        </tr>
-                        <tr>
-                            <td>Abilities:</td>
-                            <td>Overgrow<br>Chlorophyll<br></td>
-                        </tr>
-                    </tbody></table>
-                </div>
-            </div>
-        </div>
+        <div class="cardDisplay"></div>
         <div id="box">
             <div id="boxHeader">
                 <button id="statsBtn">Stats</button>

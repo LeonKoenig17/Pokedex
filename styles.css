@@ -33,6 +33,10 @@ header, footer {
     align-items: center;
 }
 
+#heading {
+    cursor: pointer;
+}
+
 #heading img {
     width: 60px;
     padding: 16px;
@@ -93,6 +97,7 @@ main {
 
 #loadingBar {
     height: 100%;
+    width: 0%;
     background-color:#8C3061;
 }
 
