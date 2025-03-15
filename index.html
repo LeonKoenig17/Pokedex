@@ -41,43 +41,70 @@
     </main>
     <footer>footer</footer>
     <div id="cardOverlay">
-        <div id="box">
-            <div class="cardDisplay">
-                <div class="card" style="background: linear-gradient(135deg, rgb(94, 173, 87) 75%, rgb(164, 82, 148) 20%);">
-                    <div class="cardHeader">
-                        <h3>Bulbasaur</h3>
-                        <span>45HP</span>
-                        <div class="types">
-                            <span class="grass typeIcon"></span><span class="poison typeIcon"></span>
-                        </div>
-                    </div>
-                    <div class="image">
-                        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png" alt="card image">
-                    </div>
-                    <div class="info">
-                        <span>XP: 64</span>
-                        <span>HT: 70cm</span>
-                        <span>WT: 7kg</span>
-                    </div>
-                    <div class="attributes">
-                        <table>
-                            <tbody><tr>
-                                <td>Attack:</td>
-                                <td>49</td>
-                            </tr>
-                            <tr>
-                                <td>Defense:</td>
-                                <td>49</td>
-                            </tr>
-                            <tr>
-                                <td>Abilities:</td>
-                                <td>Overgrow<br>Chlorophyll<br></td>
-                            </tr>
-                        </tbody></table>
+        <div class="cardDisplay">
+            <div class="card" style="background: linear-gradient(135deg, rgb(94, 173, 87) 75%, rgb(164, 82, 148) 20%);">
+                <div class="cardHeader largeBox">
+                    <h3>Bulbasaur</h3>
+                    <span>45HP</span>
+                    <div class="types">
+                        <span class="grass typeIcon"></span><span class="poison typeIcon"></span>
                     </div>
                 </div>
+                <div class="image">
+                    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png" alt="card image">
+                </div>
+                <div class="info largeBox">
+                    <span>XP: 64</span>
+                    <span>HT: 70cm</span>
+                    <span>WT: 7kg</span>
+                </div>
+                <div class="attributes largeBox">
+                    <table>
+                        <tbody><tr>
+                            <td>Attack:</td>
+                            <td>49</td>
+                        </tr>
+                        <tr>
+                            <td>Defense:</td>
+                            <td>49</td>
+                        </tr>
+                        <tr>
+                            <td>Abilities:</td>
+                            <td>Overgrow<br>Chlorophyll<br></td>
+                        </tr>
+                    </tbody></table>
+                </div>
             </div>
-            <div class="details"></div>
+        </div>
+        <div id="box">
+            <div id="boxHeader">
+                <button id="statsBtn">Stats</button>
+                <button id="abilitiesBtn">Abilities</button>
+                <button id="evoChainBtn">Evolutions</button>
+            </div>
+            <div id="boxContent">
+                <div id="stats">
+                    <div id="left">
+                        <div id="height">
+                            <div id="pokemonImg">
+                                <span>30cm</span>
+                                <div id="measuringTape"></div>
+                                <img src="./res/pokemon.svg" alt="" style="height: 100px">
+                            </div>
+                            <img src="./res/human.svg" alt="">
+                        </div>
+                        <div class="horiLine"></div>
+                        <div id="XpWeight">
+                            <span>XP: 64</span>
+                            <span>Weight: 7kg</span>
+                        </div>
+                    </div>
+                    <div class="vertLine"></div>
+                    <div id="right">right</div>
+                </div>
+                <!-- <div id="abilities"></div>
+                <div id="evoChain"></div> -->
+            </div>
         </div>
     </div>
 </body>
