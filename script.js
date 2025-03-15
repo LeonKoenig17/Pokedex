@@ -13,7 +13,6 @@ window.addEventListener("load", function() {
 function reset() {
     const mainContent = document.getElementById("mainContent");
     mainContent.innerHTML = "";
-    console.log(mainContent.innerHTML);
     pokemonArray = [];
     cardIndex = 0;
     offset = 30;
@@ -85,7 +84,7 @@ async function processSelection(selectionArray) {
     loadingContent.forEach(card => mainContent.innerHTML += card);
     loadingContent = [];
     setBackgroundColor();
-    console.log(pokemonArray);
+    // console.log(pokemonArray);
 }
 
 

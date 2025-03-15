@@ -110,6 +110,10 @@
     margin-bottom: 20px;
 }
 
+#right > div span {
+    white-space: nowrap;
+}
+
 .statBarContainer {
     width: 100%;
     height: 10px;
@@ -119,5 +123,5 @@
 .statBar {
     background-color: rgb(230, 73, 73);
     height: 100%;
-    width: 50%;
+    max-width: 100%;
 }

@@ -43,10 +43,20 @@ function setPokemonHeight(pokemon) {
     }
 }
 
+const maxStats = [255, 190, 250, 194, 250, 200];
+
 function setStats(pokemon) {
+    const {hitpoints, attack, defense, specialAttack, specialDefense, speed} = pokemon;
+    let stats = [hitpoints, attack, defense, specialAttack, specialDefense, speed];
     const baseXp = document.querySelector("#XpWeight #xp");
     const weight = document.querySelector("#XpWeight #wt");
+    const statBars = document.querySelectorAll(".statBar");
 
     baseXp.innerHTML = "XP: " + pokemon.experience;
     weight.innerHTML = "Weight: " + pokemon.weight + "kg";
+
+    for (i = 0; i < stats.length; i++) {
+        let percentage = (stats[i] / maxStats[i]) * 100;
+        statBars[i].style.width = `${percentage}%`;
+    }
 }
