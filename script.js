@@ -208,7 +208,7 @@ async function tracePokemon(url) {
 
 function createCard(pokemon, types, abilities) {
     return `
-        <div id="${pokemon.index}" class="card isButton" onclick="openOverlay(${pokemon.index})">
+        <div id="${pokemon.index}" class="card isButton" onclick="openOverlay(this.id)">
             <div class="cardHeader">
                 <h3>${pokemon.name}</h3>
                 <span>${pokemon.hitpoints}HP</span>

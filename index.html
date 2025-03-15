@@ -40,7 +40,7 @@
     </main>
     <footer>footer</footer>
     <div id="cardOverlay">
-        <div class="cardDisplay"></div>
+        <div id="cardDisplay"></div>
         <div id="box">
             <div id="boxHeader">
                 <button id="statsBtn">Stats</button>
@@ -51,21 +51,42 @@
                 <div id="stats">
                     <div id="left">
                         <div id="height">
-                            <div id="pokemonImg">
-                                <span>30cm</span>
-                                <div id="measuringTape"></div>
-                                <img src="./res/pokemon.svg" alt="" style="height: 100px">
-                            </div>
-                            <img src="./res/human.svg" alt="">
+                            <img id="pokemonImg" src="./res/pokemon.svg" alt="">
+                            <img id="humanImg" src="./res/human.svg" alt="">
                         </div>
                         <div class="horiLine"></div>
                         <div id="XpWeight">
-                            <span>XP: 64</span>
-                            <span>Weight: 7kg</span>
+                            <span id="xp"></span>
+                            <span id="wt"></span>
                         </div>
                     </div>
                     <div class="vertLine"></div>
-                    <div id="right">right</div>
+                    <div id="right">
+                        <div id="hp">
+                            <span>Hitpoints</span>
+                            <div class="statBarContainer"><div class="statBar"></div></div>
+                        </div>
+                        <div id="att">
+                            <span>Attack</span>
+                            <div class="statBarContainer"><div class="statBar"></div></div>
+                        </div>
+                        <div id="def">
+                            <span>Defense</span>
+                            <div class="statBarContainer"><div class="statBar"></div></div>
+                        </div>
+                        <div id="spAtt">
+                            <span>Special Attack</span>
+                            <div class="statBarContainer"><div class="statBar"></div></div>
+                        </div>
+                        <div id="spDef">
+                            <span>Special Defense</span>
+                            <div class="statBarContainer"><div class="statBar"></div></div>
+                        </div>
+                        <div id="speed">
+                            <span>Speed</span>
+                            <div class="statBarContainer"><div class="statBar"></div></div>
+                        </div>
+                    </div>
                 </div>
                 <!-- <div id="abilities"></div>
                 <div id="evoChain"></div> -->

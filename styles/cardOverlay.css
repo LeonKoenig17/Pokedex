@@ -11,7 +11,7 @@
     align-items: center;
 }
 
-.cardDisplay {
+#cardDisplay {
     width: calc(230px * 1.5);
     height: calc(330px * 1.5);
     display: flex;
@@ -51,11 +51,8 @@
     align-items: center;
 }
 
-#left, #right {
-    width: 50%;
-}
-
 #left {
+    width: 60%;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -68,20 +65,13 @@
     justify-content: center;
     align-items: end;
     padding: 20px;
-    height: 200px;
+    height: 250px;
     width: calc(100% - 40px);
 }
 
 #pokemonImg {
-    display: flex;
-    align-items: center;
-}
-
-#measuringTape {
-    background-color: black !important;
-    width: 5px;
-    height: 100px;
-    margin: 0 20px;
+    margin-right: 10px;
+    height: 100%;
 }
 
 #XpWeight {
@@ -101,10 +91,33 @@
 .horiLine {
     background-color: black;
     height: 5px;
-    width: 200px;
+    width: 90%;
 }
 
 .large {
     transform: scale(1.5);
     box-shadow: none;
+}
+
+#right {
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+
+#right > div {
+    margin-bottom: 20px;
+}
+
+.statBarContainer {
+    width: 100%;
+    height: 10px;
+    background-color: rgb(73, 46, 23);
+}
+
+.statBar {
+    background-color: rgb(230, 73, 73);
+    height: 100%;
+    width: 50%;
 }
