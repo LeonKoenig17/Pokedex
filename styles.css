@@ -7,10 +7,6 @@
     font-family: "Pixelify Sans" !important;
 }
 
-button:hover {
-    cursor: pointer;
-}
-
 #headerContent {
     width: 100%;
     max-width: 1920px;
@@ -25,6 +21,9 @@ header, footer {
     align-items: center;
     color: #ec7872;
     background-color: #522258;
+}
+
+footer {
     height: 80px;
 }
 
@@ -76,7 +75,7 @@ h1, h2, h3 {
 
 main {
     background: linear-gradient(0, #8C3061, #C63C51, #ec7872, #C63C51, #8C3061);
-    min-height: calc(100vh - 160px);
+    min-height: calc(100vh - 92px - 80px);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -143,6 +142,7 @@ main {
     font-size: 20px;
     color: white;
     display: none;
+    text-align: center;
 }
 
 ::-webkit-scrollbar {
