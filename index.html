@@ -22,8 +22,8 @@
                 <h1>Pokedex</h1>
             </div>
             <div id="search">
-                <button id="searchBtn">Search</button>
-                <input id="searchInput" type="text">
+                <button id="searchBtn"><img src="./res/search.svg" alt="search"></button>
+                <input id="searchInput" type="text" placeholder="min. 3 characters">
             </div>
         </div>
     </header>
@@ -40,7 +40,13 @@
     </main>
     <footer>footer</footer>
     <div id="cardOverlay">
-        <div id="cardDisplay"></div>
+        <div>
+            <div id="cardDisplay"></div>
+            <div id="arrows">
+                <button id="leftArrow" onclick="previousCard(this.id)"><img src="./res/leftArrow.svg" alt="left arrow"></button>
+                <button id="rightArrow" onclick="nextCard()"><img src="./res/rightArrow.svg" alt="right arrow"></button>
+            </div>
+        </div>
         <div id="box">
             <div id="boxHeader">
                 <button id="statsBtn" onclick="toggleTab(this.id)">Stats</button>

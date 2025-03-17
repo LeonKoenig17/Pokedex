@@ -35,6 +35,7 @@ function closeOverlay(event) {
         cardDisplay.innerHTML = "";
         overlay.style.display = "none";
         document.body.style.overflowY = "auto";
+        console.log(leftArrow);
     }
 }
 
@@ -115,4 +116,18 @@ function displayEvoChain(pokemon) {
             </div>
         `;
     })
+}
+
+function previousCard(id) {
+    if (id != 0) {
+        const button = document.getElementById(id);
+        const card = document.querySelector("#cardDisplay div");
+        const previousCard = card.id - 1;
+        button.addEventListener("click", closeOverlay);
+        openOverlay(previousCard);
+    }
+}
+
+function nextCard() {
+
 }

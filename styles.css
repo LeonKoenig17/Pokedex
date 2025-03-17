@@ -42,6 +42,24 @@ header, footer {
     padding: 16px;
 }
 
+#search button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+    height: 50px;
+    border: none;
+    background: none;
+}
+
+#search button:hover {
+    border: 3px solid #ec7872;
+}
+
+#search img {
+    width: 30px;
+}
+
 #searchInput {
     margin: 10px;
     border: none;
@@ -93,6 +111,7 @@ main {
     height: 20px;
     width: 100%;
     background-color: rgb(255, 235, 235);
+    border: 3px solid rgb(255, 235, 235);
 }
 
 #loadingBar {
@@ -118,4 +137,16 @@ main {
 
 #loadMoreBtn:hover {
     border: 3px solid rgb(223, 223, 223);
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background-color: #ec7872;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #8C3061;
 }

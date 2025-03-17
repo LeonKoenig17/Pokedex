@@ -1,11 +1,15 @@
 // bugs:
 // implement:
-    // card overlay:
-    // overlay should close when clicking in empty space
-    // body not scrollable while overlay is open
     // go to next/previous card by clicking arrows
+    // display message when no search result is found.
 
 window.addEventListener("load", function() {
+    const inputField = document.getElementById("searchInput");
+    document.addEventListener("keydown", function(event) {
+        if (event.key == "Enter" && document.activeElement == inputField) {
+            getInput();
+        }
+    })
     reset();
 })
 
@@ -25,7 +29,7 @@ function getInput() {
     let input = inputField.value.trim();
     pokemonArray = [];
     cardIndex = 0;
-    if (input != "") {
+    if (input.length >= 3) {
         start(input);
     }
 }
@@ -84,7 +88,6 @@ async function processSelection(selectionArray) {
     loadingContent.forEach(card => mainContent.innerHTML += card);
     loadingContent = [];
     setBackgroundColor();
-    // console.log(pokemonArray);
 }
 
 

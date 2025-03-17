@@ -19,6 +19,34 @@
     align-items: center;
 }
 
+#arrows {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px 0;
+    width: calc(230px * 1.5);
+    position: absolute;
+}
+
+#arrows button {
+    background-color: black;
+    border: 3px solid transparent;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#arrows button:hover {
+    border: 3px solid white;
+    cursor: pointer;
+}
+
+#arrows img {
+    width: 50px;
+    filter: invert(1) brightness(0.9);
+}
+
 #box {
     width: 600px;
     height: 450px;
@@ -141,7 +169,7 @@
 #abilities p {
     margin: 10px 0;
     margin-bottom: 30px;
-    font-size: 16px;
+    /* font-size: 16px; */
 }
 
 #evoChain {
@@ -172,4 +200,17 @@
 
 .activeBtn {
     border-bottom: none !important;
+}
+
+#cardOverlay ::-webkit-scrollbar {
+    width: 10px;
+    /* height: 10px; */
+}
+
+#cardOverlay ::-webkit-scrollbar-track {
+    background-color: rgb(219, 176, 141);
+}
+
+#cardOverlay ::-webkit-scrollbar-thumb {
+    background-color: rgb(56, 45, 35);
 }
