@@ -1,8 +1,3 @@
-// bugs:
-// implement:
-    // go to next/previous card by clicking arrows
-    // display message when no search result is found.
-
 window.addEventListener("load", function() {
     const inputField = document.getElementById("searchInput");
     document.addEventListener("keydown", function(event) {
@@ -26,7 +21,9 @@ function reset() {
 
 function getInput() {
     const inputField = document.getElementById("searchInput");
+    const noRes = document.getElementById("noRes");
     let input = inputField.value.trim();
+    noRes.style.display = "none";
     pokemonArray = [];
     cardIndex = 0;
     if (input.length >= 3) {
@@ -41,6 +38,7 @@ async function start(input) {
     try {
         const mainContent = document.getElementById("mainContent");
         const loadMoreBtn = document.getElementById("loadMoreBtn");
+        const noRes = document.getElementById("noRes");
         let path = `https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0`;
         let responseToJson = await fetch(path).then(res => res.json()); // all-pokemon array
         let selectionArray = [];
@@ -52,7 +50,14 @@ async function start(input) {
                     selectionArray.push(pokemon.url);
                 }
             })
-            processSelection(selectionArray);
+
+            if (selectionArray.length == 0) {
+                noRes.style.display = "block";
+                noRes.innerHTML = `<h3>Sorry! There are no results for "${input}".</h3>`
+                loadMoreBtn.style.display = "none";
+            } else {
+                processSelection(selectionArray);
+            }
         } else {
             for (let i = 0; i < offset; i++) {
                 selectionArray.push(responseToJson.results[i].url);

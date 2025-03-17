@@ -13,6 +13,7 @@ function openOverlay(id) {
     card.classList.remove("isButton");
     card.onclick = null;
     overlay.style.display = "flex";
+    renderArrows(id);
     setPokemonHeight(pokemon);
     setStats(pokemon);
     displayAbilities(pokemon);
@@ -21,10 +22,16 @@ function openOverlay(id) {
 
 function closeOverlay(event) {
     const overlay = document.getElementById("cardOverlay");
-    const cardDisplay = document.getElementById("cardDisplay");
-    const abilities = document.getElementById("abilities");
     
     if (event.target === overlay) {
+        resetOverlay();
+    }
+}
+
+function resetOverlay() {
+        const overlay = document.getElementById("cardOverlay");
+        const cardDisplay = document.getElementById("cardDisplay");
+        const abilities = document.getElementById("abilities");
         const evoChain = document.getElementById("evoChain");
         evoChain.innerHTML = "";
         const btns = document.querySelectorAll("#boxHeader button");
@@ -35,8 +42,6 @@ function closeOverlay(event) {
         cardDisplay.innerHTML = "";
         overlay.style.display = "none";
         document.body.style.overflowY = "auto";
-        console.log(leftArrow);
-    }
 }
 
 function toggleTab(id) {
@@ -118,16 +123,31 @@ function displayEvoChain(pokemon) {
     })
 }
 
-function previousCard(id) {
-    if (id != 0) {
-        const button = document.getElementById(id);
-        const card = document.querySelector("#cardDisplay div");
-        const previousCard = card.id - 1;
-        button.addEventListener("click", closeOverlay);
-        openOverlay(previousCard);
+function renderArrows(id) {
+    const leftArrow = document.getElementById("leftArrow");
+    const rightArrow = document.getElementById("rightArrow");
+    if (id == 0) {
+        leftArrow.style.visibility = "hidden";
+    } else {
+        leftArrow.style.visibility = "visible";
+    }
+    if (id == pokemonArray.length - 1) {
+        rightArrow.style.visibility = "hidden";
+    } else {
+        rightArrow.style.visibility = "visible";
     }
 }
 
-function nextCard() {
+function previousCard() {
+    const card = document.querySelector("#cardDisplay div");
+    const previousCard = parseInt(card.id) - 1;
+    resetOverlay();
+    openOverlay(previousCard);
+}
 
+function nextCard() {
+    const card = document.querySelector("#cardDisplay div");
+    const nextCard = parseInt(card.id) + 1;
+    resetOverlay();
+    openOverlay(nextCard);
 }

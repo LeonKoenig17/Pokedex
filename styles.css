@@ -139,6 +139,12 @@ main {
     border: 3px solid rgb(223, 223, 223);
 }
 
+#noRes {
+    font-size: 20px;
+    color: white;
+    display: none;
+}
+
 ::-webkit-scrollbar {
     width: 10px;
 }
