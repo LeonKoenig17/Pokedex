@@ -1,18 +1,27 @@
 function openOverlay(id) {
     const overlay = document.getElementById("cardOverlay");
+    overlay.addEventListener("click", closeOverlay);
+    overlay.style.display = "flex";
+
     const cardDisplay = document.getElementById("cardDisplay");
     const originalCard = document.getElementById(id);
     const card = originalCard.cloneNode(true);
-    document.getElementById("stats").classList.add("active");
-    document.getElementById("statsBtn").classList.add("activeBtn");
-    let pokemon = pokemonArray[id];
-    document.body.style.overflowY = "hidden";
-    overlay.addEventListener("click", closeOverlay);
+
     cardDisplay.appendChild(card);
     card.classList.add("large");
     card.classList.remove("isButton");
     card.onclick = null;
-    overlay.style.display = "flex";
+
+    document.getElementById("stats").classList.add("active");
+    document.getElementById("statsBtn").classList.add("activeBtn");
+    document.body.style.overflowY = "hidden";
+
+    renderOverlay(id);
+}
+
+function renderOverlay(id) {
+    let pokemon = pokemonArray[id];
+
     renderArrows(id);
     setPokemonHeight(pokemon);
     setStats(pokemon);

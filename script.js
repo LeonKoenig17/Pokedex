@@ -1,9 +1,7 @@
 // search on input
-// impressum
 // block interaction when loading more
 // responsive on screen 
-// shorten functions
-// html string to separate script
+// scrollbar at 350px
 
 window.addEventListener("load", function() {
     const inputField = document.getElementById("searchInput");
@@ -19,6 +17,8 @@ window.addEventListener("load", function() {
 function reset() {
     const mainContent = document.getElementById("mainContent");
     mainContent.innerHTML = "";
+    const noRes = document.getElementById("noRes");
+    noRes.style.display = "none";
     pokemonArray = [];
     cardIndex = 0;
     offset = 30;
@@ -28,11 +28,14 @@ function reset() {
 
 function getInput() {
     const inputField = document.getElementById("searchInput");
-    const noRes = document.getElementById("noRes");
     let input = inputField.value.trim();
+
+    const noRes = document.getElementById("noRes");
     noRes.style.display = "none";
+
     pokemonArray = [];
     cardIndex = 0;
+    
     if (input.length >= 3) {
         start(input);
     }
@@ -43,28 +46,13 @@ let offset = 30;
 
 async function start(input) {
     try {
-        const mainContent = document.getElementById("mainContent");
         const loadMoreBtn = document.getElementById("loadMoreBtn");
-        const noRes = document.getElementById("noRes");
         let path = `https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0`;
         let responseToJson = await fetch(path).then(res => res.json()); // all-pokemon array
         let selectionArray = [];
 
         if (input != "") {
-            mainContent.innerHTML = "";
-            responseToJson.results.forEach(pokemon => {
-                if(pokemon.name.toLowerCase().includes(input.toLowerCase())) {
-                    selectionArray.push(pokemon.url);
-                }
-            })
-
-            if (selectionArray.length == 0) {
-                noRes.style.display = "block";
-                noRes.innerHTML = `<h3>Sorry! There are no results for "${input}".</h3>`
-                loadMoreBtn.style.display = "none";
-            } else {
-                processSelection(selectionArray);
-            }
+            processInput(responseToJson, input, selectionArray, loadMoreBtn);
         } else {
             for (let i = 0; i < offset; i++) {
                 selectionArray.push(responseToJson.results[i].url);
@@ -79,6 +67,25 @@ async function start(input) {
 }
 
 let loadingContent = [];
+
+function processInput(responseToJson, input, selectionArray, loadMoreBtn) {
+    const mainContent = document.getElementById("mainContent");
+    const noRes = document.getElementById("noRes");
+    mainContent.innerHTML = "";
+    responseToJson.results.forEach(pokemon => {
+        if (pokemon.name.toLowerCase().includes(input.toLowerCase())) {
+            selectionArray.push(pokemon.url);
+        }
+    });
+
+    if (selectionArray.length == 0) {
+        noRes.style.display = "block";
+        noRes.innerHTML = `<h3>Sorry! There are no results for "${input}".</h3>`;
+        loadMoreBtn.style.display = "none";
+    } else {
+        processSelection(selectionArray);
+    }
+}
 
 async function processSelection(selectionArray) {
     const mainContent = document.getElementById("mainContent");
@@ -138,58 +145,14 @@ let cardIndex = 0;
 
 async function getStats(pokemon) {
     try {
-        let {name, types, sprites, stats, base_experience, height, weight, abilities, species} = pokemon;
-        let formattedName = name.charAt(0).toUpperCase() + name.slice(1);
-        let typeNames = types.map(type => type.type.name);
-        let [hp, attack, defense, specialAttack, specialDefense, speed] = stats.map(stat => stat.base_stat);
-        height *= 10;
-        weight = Math.round(weight / 10);
-
-        let abilityPromises = abilities.map(async (i) => {
-            let responseToJson = await fetch(i.ability.url).then(res => res.json());
-            let description = responseToJson.effect_entries.find(entry => entry.language.name === "en")?.effect || "No description available";
-            return {name: responseToJson.name, description};
-        })
-
-        let abilityData = await Promise.all(abilityPromises);
-        let speciesToJson = await fetch(species.url).then(res => res.json());
-        let evoChainToJson = await fetch(speciesToJson.evolution_chain.url).then(res => res.json());
-        
-        let evoChainArray = [];
-        let path = evoChainToJson.chain;
-
-        while (path) {
-            let evoData = await getEvolutionData(path);
-            if (evoData) evoChainArray.push(evoData);
-            path = path.evolves_to.length ? path.evolves_to[0] : null;
-        }
-
-        let typeString = "";
-        types.forEach(type => {
-            let nextType = type.type.name;
-            typeString += `<span class="${nextType} typeIcon"></span>`;
-        });
-
-        let abilityString = "";
-        abilities.forEach(ability => {
-            let nextAbility = ability.ability.name.charAt(0).toUpperCase() + ability.ability.name.slice(1);
-            abilityString += `${nextAbility}<br>`;
-        })
+        let formattedPokemon = formatPokemonData(pokemon);
+        let abilityData = await fetchAbilities(pokemon.abilities);
+        let evoChainArray = await fetchEvolutionChain(pokemon.species.url);
+        let typeString = generateTypeIcons(pokemon.types);
+        let abilityString = generateAbilityString(pokemon.abilities);
         
         let newPokemon = {
-            index: cardIndex,
-            name: formattedName,
-            image: sprites.front_default,
-            types: typeNames,
-            hitpoints: hp,
-            attack: attack, 
-            defense: defense, 
-            specialAttack: specialAttack, 
-            specialDefense: specialDefense, 
-            speed: speed,
-            experience: base_experience, 
-            height: height,
-            weight: weight,
+            ...formattedPokemon,
             abilities: abilityData,
             evolutions: evoChainArray
         }
@@ -200,6 +163,55 @@ async function getStats(pokemon) {
     } catch (error) {
         console.error("getStatsError: " + error)
     }
+}
+
+
+function formatPokemonData(pokemon) {
+    let {name, types, sprites, stats, base_experience, height, weight} = pokemon;
+    let formattedName = name.charAt(0).toUpperCase() + name.slice(1);
+    let typeNames = types.map(type => type.type.name);
+    let [hp, attack, defense, specialAttack, specialDefense, speed] = stats.map(stat => stat.base_stat);
+
+    return {
+        index: cardIndex,
+        name: formattedName,
+        image: sprites.front_default,
+        types: typeNames,
+        hitpoints: hp,
+        attack: attack, 
+        defense: defense, 
+        specialAttack: specialAttack, 
+        specialDefense: specialDefense, 
+        speed: speed,
+        experience: base_experience, 
+        height: height * 10,
+        weight: Math.round(weight / 10),
+    }
+}
+
+
+async function fetchAbilities(abilities) {
+    return await Promise.all(abilities.map(async (i) => {
+        let responseToJson = await fetch(i.ability.url).then(res => res.json());
+        let description = responseToJson.effect_entries.find(entry => entry.language.name === "en")?.effect || "No description available";
+        return {name: responseToJson.name, description};
+    }));
+}
+
+
+async function fetchEvolutionChain(speciesUrl) {
+    let speciesToJson = await fetch(speciesUrl).then(res => res.json());
+    let evoChainToJson = await fetch(speciesToJson.evolution_chain.url).then(res => res.json());
+    let evoChainArray = [];
+    let path = evoChainToJson.chain;
+
+    while (path) {
+        let evoData = await getEvolutionData(path);
+        if (evoData) evoChainArray.push(evoData);
+        path = path.evolves_to.length ? path.evolves_to[0] : null;
+    }
+
+    return evoChainArray;
 }
 
 
@@ -220,40 +232,25 @@ async function tracePokemon(url) {
 }
 
 
-function createCard(pokemon, types, abilities) {
-    return `
-        <div id="${pokemon.index}" class="card isButton" onclick="openOverlay(this.id)">
-            <div class="cardHeader">
-                <h3>${pokemon.name}</h3>
-                <span>${pokemon.hitpoints}HP</span>
-                <div class="types">${types}</div>
-            </div>
-            <div class="image">
-                <img src="${pokemon.image}" alt="card image">
-            </div>
-            <div class="info">
-                <span>XP: ${pokemon.experience}</span>
-                <span>HT: ${pokemon.height}cm</span>
-                <span>WT: ${pokemon.weight}kg</span>
-            </div>
-            <div class="attributes">
-                <table>
-                    <tr>
-                        <td>Attack:</td>
-                        <td>${pokemon.attack}</td>
-                    </tr>
-                    <tr>
-                        <td>Defense:</td>
-                        <td>${pokemon.defense}</td>
-                    </tr>
-                    <tr>
-                        <td>Abilities:</td>
-                        <td>${abilities}</td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-    `;
+function generateTypeIcons(types) {
+    let typeString = "";
+    types.forEach(type => {
+        let nextType = type.type.name;
+        typeString += `<span class="${nextType} typeIcon"></span>`;
+    });
+
+    return typeString;
+}
+
+
+function generateAbilityString(abilities) {
+    let abilityString = "";
+    abilities.forEach(ability => {
+        let nextAbility = ability.ability.name.charAt(0).toUpperCase() + ability.ability.name.slice(1);
+        abilityString += `${nextAbility}<br>`;
+    })
+
+    return abilityString;
 }
 
 
