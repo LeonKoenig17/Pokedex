@@ -1,14 +1,19 @@
-// search on input
 // block interaction when loading more
 // responsive on screen 
 // scrollbar at 350px
+let timeout;
+let isLoading = false;
+setInterval(interval, 1000);
+function interval() {
+    console.log(isLoading);
+}
 
 window.addEventListener("load", function() {
-    const inputField = document.getElementById("searchInput");
-    document.addEventListener("keydown", function(event) {
-        if (event.key == "Enter" && document.activeElement == inputField) {
+    document.getElementById("searchInput").addEventListener("input", function() {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
             getInput();
-        }
+        }, 1000);
     })
     reset();
 })
@@ -17,11 +22,17 @@ window.addEventListener("load", function() {
 function reset() {
     const mainContent = document.getElementById("mainContent");
     mainContent.innerHTML = "";
+    
+    const reloadBtn = document.getElementById("reloadMain");
+    reloadBtn.style.display = "none";
+
     const noRes = document.getElementById("noRes");
     noRes.style.display = "none";
+
     pokemonArray = [];
     cardIndex = 0;
     offset = 30;
+
     start("");
 }
 
@@ -30,14 +41,18 @@ function getInput() {
     const inputField = document.getElementById("searchInput");
     let input = inputField.value.trim();
 
+    const reloadBtn = document.getElementById("reloadMain");
+    reloadBtn.style.display = "none";
+
     const noRes = document.getElementById("noRes");
     noRes.style.display = "none";
 
     pokemonArray = [];
     cardIndex = 0;
     
-    if (input.length >= 3) {
+    if (input.length >= 3 && !isLoading) {
         start(input);
+        isLoading = true;
     }
 }
 
@@ -68,7 +83,8 @@ async function start(input) {
 
 let loadingContent = [];
 
-function processInput(responseToJson, input, selectionArray, loadMoreBtn) {
+async function processInput(responseToJson, input, selectionArray, loadMoreBtn) {
+    const reloadBtn = document.getElementById("reloadMain");
     const mainContent = document.getElementById("mainContent");
     const noRes = document.getElementById("noRes");
     mainContent.innerHTML = "";
@@ -82,31 +98,29 @@ function processInput(responseToJson, input, selectionArray, loadMoreBtn) {
         noRes.style.display = "block";
         noRes.innerHTML = `<h3>Sorry! There are no results for "${input}".</h3>`;
         loadMoreBtn.style.display = "none";
+        isLoading = false;
+        reloadBtn.style.display = "block";
     } else {
-        processSelection(selectionArray);
+        await processSelection(selectionArray);
+        reloadBtn.style.display = "block";
     }
 }
 
 async function processSelection(selectionArray) {
     const mainContent = document.getElementById("mainContent");
     const overlay = document.getElementById("loading");
-    const searchBtn = document.getElementById("searchBtn");
-    const heading = document.getElementById("heading");
     const loadMoreBtn = document.getElementById("loadMoreBtn");
 
-    searchBtn.removeEventListener("click", getInput);
-    heading.removeEventListener("click", reset);
     loadMoreBtn.style.display = "none";
     showLoading(overlay);
 
     await loadData(selectionArray);
 
-    searchBtn.addEventListener("click", getInput);
-    heading.addEventListener("click", reset);
     hideLoading(overlay);
     loadingContent.forEach(card => mainContent.innerHTML += card);
     loadingContent = [];
     setBackgroundColor();
+    isLoading = false;
 }
 
 
