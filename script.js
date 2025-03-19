@@ -1,3 +1,10 @@
+// search on input
+// impressum
+// block interaction when loading more
+// responsive on screen 
+// shorten functions
+// html string to separate script
+
 window.addEventListener("load", function() {
     const inputField = document.getElementById("searchInput");
     document.addEventListener("keydown", function(event) {
