@@ -1,13 +1,3 @@
-@media (max-width: 1000px) {
-    #cardOverlay {
-        flex-direction: column;
-    }
-
-    #box {
-        margin-top: 80px;
-    }
-}
-
 @media (max-width: 635px) {
     #headerContent {
         flex-direction: column;

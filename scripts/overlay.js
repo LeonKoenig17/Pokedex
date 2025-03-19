@@ -3,14 +3,18 @@ function openOverlay(id) {
     overlay.addEventListener("click", closeOverlay);
     overlay.style.display = "flex";
 
-    const cardDisplay = document.getElementById("cardDisplay");
-    const originalCard = document.getElementById(id);
-    const card = originalCard.cloneNode(true);
-
-    cardDisplay.appendChild(card);
-    card.classList.add("large");
-    card.classList.remove("isButton");
-    card.onclick = null;
+    const pokeDisplay = document.getElementById("pokemonDisplay");
+    const pokemon = pokemonArray[id];
+    document.querySelector("#pokemonDisplay h3").innerHTML = pokemon.name;
+    document.querySelector("#pokemonDisplay img").src = pokemon.image;
+    const types = document.querySelector("#pokemonDisplay #types");
+    pokemon.types.forEach(type => {
+        types.innerHTML += `
+            <div>
+                <span class="${type} typeIcon"></span>
+                <span>${type}</span>
+            </div>`;
+    })
 
     document.getElementById("stats").classList.add("active");
     document.getElementById("statsBtn").classList.add("activeBtn");
@@ -48,7 +52,7 @@ function resetOverlay() {
         const tabs = document.querySelectorAll("#boxContent > div");
         tabs.forEach(tab => tab.classList.remove("active"));
         abilities.innerHTML = "";
-        cardDisplay.innerHTML = "";
+        // cardDisplay.innerHTML = "";
         overlay.style.display = "none";
         document.body.style.overflowY = "auto";
 }
