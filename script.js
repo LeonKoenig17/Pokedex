@@ -1,18 +1,17 @@
-// block interaction when loading more
 // responsive on screen 
 // scrollbar at 350px
 let timeout;
 let isLoading = false;
-setInterval(interval, 1000);
-function interval() {
-    console.log(isLoading);
-}
 
 window.addEventListener("load", function() {
     document.getElementById("searchInput").addEventListener("input", function() {
         clearTimeout(timeout);
         timeout = setTimeout(() => {
-            getInput();
+            const inputField = document.getElementById("searchInput");
+            let input = inputField.value.trim();
+            if (input.length >= 3) {
+                getInput();
+            }
         }, 1000);
     })
     reset();
@@ -50,7 +49,7 @@ function getInput() {
     pokemonArray = [];
     cardIndex = 0;
     
-    if (input.length >= 3 && !isLoading) {
+    if (!isLoading) {
         start(input);
         isLoading = true;
     }
@@ -125,6 +124,9 @@ async function processSelection(selectionArray) {
 
 
 async function loadMore() {
+    const overlay = document.getElementById("loading");
+    originalParent = overlay.parentNode;
+    const darkBg = document.getElementById("darkBg");
     let path = `https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0`;
     let responseToJson = await fetch(path).then(res => res.json());
     let selectionArray = [];
@@ -134,8 +136,12 @@ async function loadMore() {
         selectionArray.push(responseToJson.results[i].url);
     }
     offset += 30;
-    
+
+    darkBg.style.display = "flex";
+    darkBg.appendChild(overlay);
     await processSelection(selectionArray);
+    darkBg.style.display = "none";
+    originalParent.appendChild(overlay);
     loadMoreBtn.style.display = "block";
     selectionArray = [];
 }
