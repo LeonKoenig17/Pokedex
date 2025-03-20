@@ -86,7 +86,7 @@ h1, h2, h3 {
 
 main {
     background: linear-gradient(0, #8C3061, #C63C51, #ec7872, #C63C51, #8C3061);
-    min-height: calc(100vh - 92px - 80px);
+    min-height: calc(100vh - 92px - 93px);
     display: flex;
     flex-direction: column;
     align-items: center;
