@@ -1,5 +1,3 @@
-// responsive on screen 
-// scrollbar at 350px
 let timeout;
 let isLoading = false;
 
@@ -124,9 +122,6 @@ async function processSelection(selectionArray) {
 
 
 async function loadMore() {
-    const overlay = document.getElementById("loading");
-    originalParent = overlay.parentNode;
-    const darkBg = document.getElementById("darkBg");
     let path = `https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0`;
     let responseToJson = await fetch(path).then(res => res.json());
     let selectionArray = [];
@@ -136,14 +131,25 @@ async function loadMore() {
         selectionArray.push(responseToJson.results[i].url);
     }
     offset += 30;
+    
+    selectionArray = await renderMore(selectionArray);
+}
 
+
+async function renderMore(selectionArray) {
+    const overlay = document.getElementById("loading");
+    originalParent = overlay.parentNode;
+    const darkBg = document.getElementById("darkBg");
     darkBg.style.display = "flex";
     darkBg.appendChild(overlay);
+    document.body.style.overflowY = "hidden";
     await processSelection(selectionArray);
     darkBg.style.display = "none";
+    document.body.style.overflowY = "auto";
     originalParent.appendChild(overlay);
     loadMoreBtn.style.display = "block";
     selectionArray = [];
+    return selectionArray;
 }
 
 

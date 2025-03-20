@@ -23,7 +23,7 @@
     }
 
     #box {
-        margin-top: 20px;
+        /* margin-top: 20px; */
         width: 300px;
     }
 
@@ -32,22 +32,47 @@
     }
 
     #boxContent {
-        height: auto;
+        height: 350px;
     }
 
     #cardNav {
         transform: scale(0.8)
     }
 
-    #stats {
-        flex-direction: column;
+    #left {
+        width: 50%;
     }
 
-    #stats .vertLine {
+    #left #height{
+        transform: scale(0.6)
+    }
+
+    .horiLine, .vertLine {
         display: none;
     }
 
-    #evoChain {
+    #XpWeight {
+        width: auto;
         flex-direction: column;
+        align-items: unset;
+        padding: 20px;
+    }
+
+    #right {
+        transform: scale(0.8)
+    }
+
+    #evoChain {
+        flex-wrap: wrap;
+        padding: 10px;
+    }
+
+    #evoChain .evo {
+        margin: 10px;
+    }
+
+    #evoChain img{
+        width: 100px;
+        height: 100px;
     }
 }

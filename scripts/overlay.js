@@ -2,25 +2,32 @@ function openOverlay(id) {
     const overlay = document.getElementById("cardOverlay");
     overlay.addEventListener("click", closeOverlay);
     overlay.style.display = "flex";
+    overlay.className = id;
 
-    const pokeDisplay = document.getElementById("pokemonDisplay");
     const pokemon = pokemonArray[id];
     document.querySelector("#pokemonDisplay h3").innerHTML = pokemon.name;
     document.querySelector("#pokemonDisplay img").src = pokemon.image;
     const types = document.querySelector("#pokemonDisplay #types");
-    pokemon.types.forEach(type => {
-        types.innerHTML += `
-            <div>
-                <span class="${type} typeIcon"></span>
-                <span>${type}</span>
-            </div>`;
-    })
+    types.innerHTML = getTypeString(pokemon.types);
 
     document.getElementById("stats").classList.add("active");
     document.getElementById("statsBtn").classList.add("activeBtn");
     document.body.style.overflowY = "hidden";
 
     renderOverlay(id);
+}
+
+function getTypeString(types) {
+    let typeString = "";
+    types.forEach(type => {
+        let formattedType = type.charAt(0).toUpperCase() + type.slice(1);
+        typeString += `
+            <div>
+                <span class="${type} typeIcon"></span>
+                <span>${formattedType}</span>
+            </div>`;
+    })
+    return typeString;
 }
 
 function renderOverlay(id) {
@@ -52,7 +59,6 @@ function resetOverlay() {
         const tabs = document.querySelectorAll("#boxContent > div");
         tabs.forEach(tab => tab.classList.remove("active"));
         abilities.innerHTML = "";
-        // cardDisplay.innerHTML = "";
         overlay.style.display = "none";
         document.body.style.overflowY = "auto";
 }
@@ -152,15 +158,15 @@ function renderArrows(id) {
 }
 
 function previousCard() {
-    const card = document.querySelector("#cardDisplay div");
-    const previousCard = parseInt(card.id) - 1;
+    const overlay = document.getElementById("cardOverlay");
+    const previousCard = parseInt(overlay.className) - 1;
     resetOverlay();
     openOverlay(previousCard);
 }
 
 function nextCard() {
-    const card = document.querySelector("#cardDisplay div");
-    const nextCard = parseInt(card.id) + 1;
+    const overlay = document.getElementById("cardOverlay");
+    const nextCard = parseInt(overlay.className) + 1;
     resetOverlay();
     openOverlay(nextCard);
 }
