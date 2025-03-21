@@ -1,5 +1,17 @@
 let timeout;
 let isLoading = false;
+let fetchedUrls = [];
+
+async function compareUrls() {
+
+}
+// find data
+// if newUrl is not in fetchedUrls
+    // fetch url
+    // store {url, data}
+    // return new data
+// else
+    // return old data
 
 window.addEventListener("load", function() {
     document.getElementById("searchInput").addEventListener("input", function() {
@@ -9,6 +21,8 @@ window.addEventListener("load", function() {
             let input = inputField.value.trim();
             if (input.length >= 3) {
                 getInput();
+            } else if (input.length == 0){
+                reset();
             }
         }, 1000);
     })
@@ -60,7 +74,8 @@ async function start(input) {
     try {
         const loadMoreBtn = document.getElementById("loadMoreBtn");
         let path = `https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0`;
-        let responseToJson = await fetch(path).then(res => res.json()); // all-pokemon array
+        let responseToJson = await fetch(path).then(res => res.json()); // all pokemon loaded
+        console.log("fetched all pokemon");
         let selectionArray = [];
 
         if (input != "") {
@@ -124,6 +139,7 @@ async function processSelection(selectionArray) {
 async function loadMore() {
     let path = `https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0`;
     let responseToJson = await fetch(path).then(res => res.json());
+    console.log("fetched loadMore all pokemon");
     let selectionArray = [];
     
     for (let i = offset; i < (offset + 30); i++) {
@@ -158,6 +174,7 @@ async function loadData(selectionArray) {
     let cardIndex = 0;
     for (const url of selectionArray) {
         let data = await fetch(url).then(res => res.json());
+        console.log("fetched url of selectionArray");
         await getStats(data);
         cardIndex++;
         let percentage = (cardIndex / selectionArray.length) * 100;
@@ -219,6 +236,7 @@ function formatPokemonData(pokemon) {
 async function fetchAbilities(abilities) {
     return await Promise.all(abilities.map(async (i) => {
         let responseToJson = await fetch(i.ability.url).then(res => res.json());
+        console.log("fetched abilities");
         let description = responseToJson.effect_entries.find(entry => entry.language.name === "en")?.effect || "No description available";
         return {name: responseToJson.name, description};
     }));
@@ -227,7 +245,9 @@ async function fetchAbilities(abilities) {
 
 async function fetchEvolutionChain(speciesUrl) {
     let speciesToJson = await fetch(speciesUrl).then(res => res.json());
+    console.log("fetched species");
     let evoChainToJson = await fetch(speciesToJson.evolution_chain.url).then(res => res.json());
+    console.log("fetched evoChain");
     let evoChainArray = [];
     let path = evoChainToJson.chain;
 
@@ -253,7 +273,9 @@ async function getEvolutionData(evoPath) {
 
 async function tracePokemon(url) {
     let speciesBkToJson = await fetch(url).then(res => res.json());
+    console.log("fetched species back");
     let pokemonBkToJson = await fetch(speciesBkToJson.varieties[0].pokemon.url).then(res => res.json());
+    console.log("fetched pokemon back");
     return pokemonBkToJson;
 }
 
