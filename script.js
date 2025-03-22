@@ -4,6 +4,7 @@ let fetchedUrls = {};
 let offset = 30;
 let loadingContent = [];
 let pokemonArray = [];
+let abortController = new AbortController();
 
 
 async function compareUrls(url) {
@@ -22,22 +23,28 @@ async function compareUrls(url) {
 
 window.addEventListener("load", function() {
     document.getElementById("searchInput").addEventListener("input", function() {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => {
+        // clearTimeout(timeout);
+        // timeout = setTimeout(() => {
             const inputField = document.getElementById("searchInput");
             let input = inputField.value.trim();
             if (input.length >= 3) {
+                abortController.abort();
+                abortController = new AbortController();
                 getInput();
             } else if (input.length == 0){
                 reset();
             }
-        }, 1000);
+        // }, 1000);
     })
     reset();
 })
 
 
 function reset() {
+    window.scrollTo({top: 0})
+    const inputField = document.getElementById("searchInput");
+    inputField.value = "";
+
     const mainContent = document.getElementById("mainContent");
     mainContent.innerHTML = "";
     
@@ -70,7 +77,7 @@ function getInput() {
     
     if (!isLoading) {
         start(input);
-        isLoading = true;
+        // isLoading = true;
     }
 }
 
