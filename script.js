@@ -1,17 +1,23 @@
 let timeout;
 let isLoading = false;
-let fetchedUrls = [];
+let fetchedUrls = {};
+let offset = 30;
+let loadingContent = [];
 
-async function compareUrls() {
 
+async function compareUrls(url) {
+    let result = "";
+    let isStored = fetchedUrls.hasOwnProperty(url);
+    if (isStored) {
+        result = fetchedUrls[url];
+    } else {
+        let newData = await fetch(url).then(res => res.json());
+        fetchedUrls[url] = newData;
+        result = newData;
+    }
+    return result;
 }
-// find data
-// if newUrl is not in fetchedUrls
-    // fetch url
-    // store {url, data}
-    // return new data
-// else
-    // return old data
+
 
 window.addEventListener("load", function() {
     document.getElementById("searchInput").addEventListener("input", function() {
@@ -68,19 +74,18 @@ function getInput() {
 }
 
 
-let offset = 30;
-
 async function start(input) {
     try {
         const loadMoreBtn = document.getElementById("loadMoreBtn");
-        let path = `https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0`;
-        let responseToJson = await fetch(path).then(res => res.json()); // all pokemon loaded
-        console.log("fetched all pokemon");
         let selectionArray = [];
-
+        
         if (input != "") {
+            let path = `https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0`;
+            let responseToJson = await compareUrls(path);
             processInput(responseToJson, input, selectionArray, loadMoreBtn);
         } else {
+            let path = `https://pokeapi.co/api/v2/pokemon?limit=30&offset=0`;
+            let responseToJson = await compareUrls(path);
             for (let i = 0; i < offset; i++) {
                 selectionArray.push(responseToJson.results[i].url);
             }
@@ -93,7 +98,6 @@ async function start(input) {
     }
 }
 
-let loadingContent = [];
 
 async function processInput(responseToJson, input, selectionArray, loadMoreBtn) {
     const reloadBtn = document.getElementById("reloadMain");
@@ -137,9 +141,8 @@ async function processSelection(selectionArray) {
 
 
 async function loadMore() {
-    let path = `https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0`;
-    let responseToJson = await fetch(path).then(res => res.json());
-    console.log("fetched loadMore all pokemon");
+    let path = `https://pokeapi.co/api/v2/pokemon?limit=${offset + 30}&offset=0`;
+    let responseToJson = await compareUrls(path);
     let selectionArray = [];
     
     for (let i = offset; i < (offset + 30); i++) {
@@ -170,39 +173,53 @@ async function renderMore(selectionArray) {
 
 
 async function loadData(selectionArray) {
-    const loadingBar = document.getElementById("loadingBar");
-    let cardIndex = 0;
-    for (const url of selectionArray) {
-        let data = await fetch(url).then(res => res.json());
-        console.log("fetched url of selectionArray");
-        await getStats(data);
-        cardIndex++;
-        let percentage = (cardIndex / selectionArray.length) * 100;
-        loadingBar.style.width = percentage + "%";
+    try {
+        let progress = 0;
+
+        const pokemonDataArray = await Promise.all(selectionArray.map(url => compareUrls(url)));
+        await Promise.all(pokemonDataArray.map(async (data, index) => {
+            await getStats(data);
+            progress++;
+            updateLoadingBar(progress, selectionArray);
+        }));
+
+        console.log(pokemonArray);
+        
+        pokemonArray.sort((a, b) => a.id - b.id);
+        pokemonArray.forEach(pokemon => {
+            let typeString = generateTypeIcons(pokemon.types);
+            let abilityString = generateAbilityString(pokemon.abilities);
+            loadingContent.push(createCard(pokemon, typeString, abilityString));
+        })
+    } catch (error) {
+        console.error(error);
     }
 }
 
 
+function updateLoadingBar(progress, selectionArray) {
+    const loadingBar = document.getElementById("loadingBar");
+    const percentage = (progress / selectionArray.length) * 100;
+    loadingBar.style.width = percentage + "%";
+}
+
+
 let pokemonArray = [];
-let cardIndex = 0;
 
 async function getStats(pokemon) {
     try {
         let formattedPokemon = formatPokemonData(pokemon);
         let abilityData = await fetchAbilities(pokemon.abilities);
         let evoChainArray = await fetchEvolutionChain(pokemon.species.url);
-        let typeString = generateTypeIcons(pokemon.types);
-        let abilityString = generateAbilityString(pokemon.abilities);
         
         let newPokemon = {
             ...formattedPokemon,
+            id: pokemon.id,
             abilities: abilityData,
             evolutions: evoChainArray
         }
 
         pokemonArray.push(newPokemon);
-        loadingContent.push(createCard(newPokemon, typeString, abilityString));
-        cardIndex++;
     } catch (error) {
         console.error("getStatsError: " + error)
     }
@@ -210,13 +227,13 @@ async function getStats(pokemon) {
 
 
 function formatPokemonData(pokemon) {
-    let {name, types, sprites, stats, base_experience, height, weight} = pokemon;
+    let {id, name, types, sprites, stats, base_experience, height, weight} = pokemon;
     let formattedName = name.charAt(0).toUpperCase() + name.slice(1);
     let typeNames = types.map(type => type.type.name);
     let [hp, attack, defense, specialAttack, specialDefense, speed] = stats.map(stat => stat.base_stat);
 
     return {
-        index: cardIndex,
+        id, 
         name: formattedName,
         image: sprites.front_default,
         types: typeNames,
@@ -235,8 +252,7 @@ function formatPokemonData(pokemon) {
 
 async function fetchAbilities(abilities) {
     return await Promise.all(abilities.map(async (i) => {
-        let responseToJson = await fetch(i.ability.url).then(res => res.json());
-        console.log("fetched abilities");
+        let responseToJson = await compareUrls(i.ability.url);
         let description = responseToJson.effect_entries.find(entry => entry.language.name === "en")?.effect || "No description available";
         return {name: responseToJson.name, description};
     }));
@@ -244,10 +260,8 @@ async function fetchAbilities(abilities) {
 
 
 async function fetchEvolutionChain(speciesUrl) {
-    let speciesToJson = await fetch(speciesUrl).then(res => res.json());
-    console.log("fetched species");
-    let evoChainToJson = await fetch(speciesToJson.evolution_chain.url).then(res => res.json());
-    console.log("fetched evoChain");
+    let speciesToJson = await compareUrls(speciesUrl);
+    let evoChainToJson = await compareUrls(speciesToJson.evolution_chain.url);
     let evoChainArray = [];
     let path = evoChainToJson.chain;
 
@@ -272,10 +286,8 @@ async function getEvolutionData(evoPath) {
 
 
 async function tracePokemon(url) {
-    let speciesBkToJson = await fetch(url).then(res => res.json());
-    console.log("fetched species back");
-    let pokemonBkToJson = await fetch(speciesBkToJson.varieties[0].pokemon.url).then(res => res.json());
-    console.log("fetched pokemon back");
+    let speciesBkToJson = await compareUrls(url);
+    let pokemonBkToJson = await compareUrls(speciesBkToJson.varieties[0].pokemon.url);
     return pokemonBkToJson;
 }
 
@@ -283,8 +295,7 @@ async function tracePokemon(url) {
 function generateTypeIcons(types) {
     let typeString = "";
     types.forEach(type => {
-        let nextType = type.type.name;
-        typeString += `<span class="${nextType} typeIcon"></span>`;
+        typeString += `<span class="${type} typeIcon"></span>`;
     });
 
     return typeString;
@@ -294,7 +305,7 @@ function generateTypeIcons(types) {
 function generateAbilityString(abilities) {
     let abilityString = "";
     abilities.forEach(ability => {
-        let nextAbility = ability.ability.name.charAt(0).toUpperCase() + ability.ability.name.slice(1);
+        let nextAbility = ability.name.charAt(0).toUpperCase() + ability.name.slice(1);
         abilityString += `${nextAbility}<br>`;
     })
 
