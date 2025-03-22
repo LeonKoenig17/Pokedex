@@ -1,20 +1,25 @@
 function openOverlay(id) {
-    const overlay = document.getElementById("cardOverlay");
-    overlay.addEventListener("click", closeOverlay);
-    overlay.style.display = "flex";
-    overlay.className = id;
+    try {
+        const overlay = document.getElementById("cardOverlay");
+        overlay.addEventListener("click", closeOverlay);
+        overlay.style.display = "flex";
+        overlay.className = id;
 
-    const pokemon = pokemonArray[id];
-    document.querySelector("#pokemonDisplay h3").innerHTML = pokemon.name;
-    document.querySelector("#pokemonDisplay img").src = pokemon.image;
-    const types = document.querySelector("#pokemonDisplay #types");
-    types.innerHTML = getTypeString(pokemon.types);
+        const pokemon = pokemonArray.find(pokemon => pokemon.id == id);
+        document.querySelector("#pokemonDisplay h3").innerHTML = pokemon.name;
+        document.querySelector("#pokemonDisplay img").src = pokemon.image;
+        const types = document.querySelector("#pokemonDisplay #types");
+        types.innerHTML = getTypeString(pokemon.types);
 
-    document.getElementById("stats").classList.add("active");
-    document.getElementById("statsBtn").classList.add("activeBtn");
-    document.body.style.overflowY = "hidden";
+        document.getElementById("stats").classList.add("active");
+        document.getElementById("statsBtn").classList.add("activeBtn");
+        document.body.style.overflowY = "hidden";
 
-    renderOverlay(id);
+        renderOverlay(pokemon);
+    } catch (error) {
+        console.error(error);
+    }
+    
 }
 
 function getTypeString(types) {
@@ -30,10 +35,8 @@ function getTypeString(types) {
     return typeString;
 }
 
-function renderOverlay(id) {
-    let pokemon = pokemonArray[id];
-
-    renderArrows(id);
+function renderOverlay(pokemon) {
+    renderArrows(pokemon.id);
     setPokemonHeight(pokemon);
     setStats(pokemon);
     displayAbilities(pokemon);

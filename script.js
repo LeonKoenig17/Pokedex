@@ -3,6 +3,7 @@ let isLoading = false;
 let fetchedUrls = {};
 let offset = 30;
 let loadingContent = [];
+let pokemonArray = [];
 
 
 async function compareUrls(url) {
@@ -186,11 +187,11 @@ async function loadData(selectionArray) {
         console.log(pokemonArray);
         
         pokemonArray.sort((a, b) => a.id - b.id);
-        pokemonArray.forEach(pokemon => {
-            let typeString = generateTypeIcons(pokemon.types);
-            let abilityString = generateAbilityString(pokemon.abilities);
-            loadingContent.push(createCard(pokemon, typeString, abilityString));
-        })
+        for (let i = (offset - 30); i < pokemonArray.length; i++) {
+            let typeString = generateTypeIcons(pokemonArray[i].types);
+            let abilityString = generateAbilityString(pokemonArray[i].abilities);
+            loadingContent.push(createCard(pokemonArray[i], typeString, abilityString));
+        }
     } catch (error) {
         console.error(error);
     }
@@ -203,8 +204,6 @@ function updateLoadingBar(progress, selectionArray) {
     loadingBar.style.width = percentage + "%";
 }
 
-
-let pokemonArray = [];
 
 async function getStats(pokemon) {
     try {
