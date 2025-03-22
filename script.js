@@ -4,7 +4,6 @@ let fetchedUrls = {};
 let offset = 30;
 let loadingContent = [];
 let pokemonArray = [];
-let abortController = new AbortController();
 
 
 async function compareUrls(url) {
@@ -23,25 +22,24 @@ async function compareUrls(url) {
 
 window.addEventListener("load", function() {
     document.getElementById("searchInput").addEventListener("input", function() {
-        // clearTimeout(timeout);
-        // timeout = setTimeout(() => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
             const inputField = document.getElementById("searchInput");
             let input = inputField.value.trim();
             if (input.length >= 3) {
-                abortController.abort();
-                abortController = new AbortController();
                 getInput();
+                inputField.readOnly = true;
             } else if (input.length == 0){
                 reset();
             }
-        // }, 1000);
+        }, 1000);
     })
     reset();
 })
 
 
 function reset() {
-    window.scrollTo({top: 0})
+    window.scrollTo({top: 0});
     const inputField = document.getElementById("searchInput");
     inputField.value = "";
 
@@ -73,11 +71,12 @@ function getInput() {
     noRes.style.display = "none";
 
     pokemonArray = [];
+    offset = 30;
     cardIndex = 0;
     
     if (!isLoading) {
         start(input);
-        // isLoading = true;
+        isLoading = true;
     }
 }
 
@@ -92,7 +91,7 @@ async function start(input) {
             let responseToJson = await compareUrls(path);
             processInput(responseToJson, input, selectionArray, loadMoreBtn);
         } else {
-            let path = `https://pokeapi.co/api/v2/pokemon?limit=30&offset=0`;
+            let path = `https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0`;
             let responseToJson = await compareUrls(path);
             for (let i = 0; i < offset; i++) {
                 selectionArray.push(responseToJson.results[i].url);
@@ -111,6 +110,7 @@ async function processInput(responseToJson, input, selectionArray, loadMoreBtn) 
     const reloadBtn = document.getElementById("reloadMain");
     const mainContent = document.getElementById("mainContent");
     const noRes = document.getElementById("noRes");
+    const inputField = document.getElementById("searchInput");
     mainContent.innerHTML = "";
     responseToJson.results.forEach(pokemon => {
         if (pokemon.name.toLowerCase().includes(input.toLowerCase())) {
@@ -123,17 +123,18 @@ async function processInput(responseToJson, input, selectionArray, loadMoreBtn) 
         noRes.innerHTML = `<h3>Sorry! There are no results for "${input}".</h3>`;
         loadMoreBtn.style.display = "none";
         isLoading = false;
-        reloadBtn.style.display = "block";
     } else {
         await processSelection(selectionArray);
-        reloadBtn.style.display = "block";
     }
+    reloadBtn.style.display = "block";
+    inputField.readOnly = false;
 }
 
 async function processSelection(selectionArray) {
     const mainContent = document.getElementById("mainContent");
     const overlay = document.getElementById("loading");
     const loadMoreBtn = document.getElementById("loadMoreBtn");
+    
 
     loadMoreBtn.style.display = "none";
     showLoading(overlay);
@@ -190,8 +191,6 @@ async function loadData(selectionArray) {
             progress++;
             updateLoadingBar(progress, selectionArray);
         }));
-
-        console.log(pokemonArray);
         
         pokemonArray.sort((a, b) => a.id - b.id);
         for (let i = (offset - 30); i < pokemonArray.length; i++) {
