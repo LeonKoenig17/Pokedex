@@ -148,28 +148,38 @@ function displayEvoChain(pokemon) {
 function renderArrows(id) {
     const leftArrow = document.getElementById("leftArrow");
     const rightArrow = document.getElementById("rightArrow");
-    if (id == 0) {
-        leftArrow.style.visibility = "hidden";
-    } else {
-        leftArrow.style.visibility = "visible";
-    }
-    if (id == pokemonArray.length - 1) {
-        rightArrow.style.visibility = "hidden";
-    } else {
-        rightArrow.style.visibility = "visible";
-    }
+    const currentIndex = pokemonArray.findIndex(pokemon => pokemon.id === id);
+
+    leftArrow.style.visibility = currentIndex > 0 ? "visible" : "hidden";
+    rightArrow.style.visibility = currentIndex < pokemonArray.length - 1 ? "visible" : "hidden";
 }
 
 function previousCard() {
     const overlay = document.getElementById("cardOverlay");
-    const previousCard = parseInt(overlay.className) - 1;
-    resetOverlay();
-    openOverlay(previousCard);
+    const currentId = parseInt(overlay.className);
+    const currentIndex = pokemonArray.findIndex(pokemon => pokemon.id === currentId);
+
+    if (currentIndex > 0) {
+        resetOverlay();
+        openOverlay(pokemonArray[currentIndex - 1].id);
+    }
+    // const overlay = document.getElementById("cardOverlay");
+    // const previousCard = parseInt(overlay.className) - 1;
+    // resetOverlay();
+    // openOverlay(previousCard);
 }
 
 function nextCard() {
     const overlay = document.getElementById("cardOverlay");
-    const nextCard = parseInt(overlay.className) + 1;
-    resetOverlay();
-    openOverlay(nextCard);
+    const currentId = parseInt(overlay.className);
+    const currentIndex = pokemonArray.findIndex(pokemon => pokemon.id === currentId);
+
+    if (currentIndex < pokemonArray.length - 1) {
+        resetOverlay();
+        openOverlay(pokemonArray[currentIndex + 1].id);
+    }
+    // const overlay = document.getElementById("cardOverlay");
+    // const nextCard = parseInt(overlay.className) + 1;
+    // resetOverlay();
+    // openOverlay(nextCard);
 }
